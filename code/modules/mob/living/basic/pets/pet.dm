@@ -10,7 +10,6 @@
 	var/collar_icon_state = null
 	/// We have a seperate _rest collar icon state when the pet is resting.
 	var/has_collar_resting_icon_state = FALSE
-
 	/// Our collar
 	var/obj/item/clothing/neck/petcollar/collar
 

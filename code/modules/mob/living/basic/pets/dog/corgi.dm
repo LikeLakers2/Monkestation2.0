@@ -516,7 +516,7 @@
 /mob/living/basic/pet/dog/corgi/narsie/narsie_act()
 	if(stat == DEAD) //Nar'Sie loves her doggy
 		visible_message(span_warning("[src] arises again, revived by the dark magicks!"), \
-		span_cultlarge("RISE"))
+		span_cult_large("RISE"))
 		revive(ADMIN_HEAL_ALL) //also means that a dead Nars-Ian can consume a pet and revive
 	adjustBruteLoss(-maxHealth)
 
