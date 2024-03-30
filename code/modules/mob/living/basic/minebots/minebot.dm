@@ -26,8 +26,6 @@
 	light_outer_range = 6
 	light_on = FALSE
 	ai_controller = /datum/ai_controller/basic_controller/minebot
-	///the access card we use to access mining
-	var/obj/item/card/id/access_card
 	///the gun we use to kill
 	var/obj/item/gun/energy/recharge/kinetic_accelerator/minebot/stored_gun
 	///the commands our owner can give us
@@ -68,10 +66,10 @@
 	stored_gun = new(src)
 	var/obj/item/implant/radio/mining/comms = new(src)
 	comms.implant(src)
-	access_card = new /obj/item/card/id/advanced/gold(src)
-	SSid_access.apply_trim_to_card(access_card, /datum/id_trim/job/shaft_miner)
-
-	RegisterSignal(src, COMSIG_MOB_TRIED_ACCESS, PROC_REF(attempt_access))
+	var/static/list/accesses = list(
+		/datum/id_trim/job/shaft_miner,
+	)
+	AddElement(/datum/element/mob_access, accesses)
 
 /mob/living/basic/mining_drone/set_combat_mode(new_mode, silent = TRUE)
 	. = ..()
@@ -129,7 +127,6 @@
 		return
 	stored_gun.afterattack(target, src)
 
-
 /mob/living/basic/mining_drone/UnarmedAttack(atom/attack_target, proximity_flag, list/modifiers)
 	. = ..()
 
@@ -144,13 +141,6 @@
 	to_chat(src, span_notice("You dump your stored ore."))
 	for(var/obj/item/stack/ore/dropped_item in contents)
 		dropped_item.forceMove(get_turf(src))
-
-/mob/living/basic/mining_drone/proc/attempt_access(mob/drone, obj/door_attempt)
-	SIGNAL_HANDLER
-
-	if(door_attempt.check_access(access_card))
-		return ACCESS_ALLOWED
-	return ACCESS_DISALLOWED
 
 /mob/living/basic/mining_drone/proc/activate_bot()
 	AddComponent(/datum/component/obeys_commands, pet_commands)
@@ -168,6 +158,5 @@
 
 /mob/living/basic/mining_drone/Destroy()
 	QDEL_NULL(stored_gun)
-	QDEL_NULL(access_card)
 	return ..()
 

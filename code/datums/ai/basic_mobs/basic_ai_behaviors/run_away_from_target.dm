@@ -46,4 +46,17 @@
 
 /datum/ai_behavior/run_away_from_target/finish_action(datum/ai_controller/controller, succeeded, target_key, hiding_location_key)
 	. = ..()
-	controller.clear_blackboard_key(target_key)
+	if (clear_failed_targets)
+		controller.clear_blackboard_key(target_key)
+
+/datum/ai_behavior/run_away_from_target/run_and_shoot
+	clear_failed_targets = FALSE
+
+/datum/ai_behavior/run_away_from_target/run_and_shoot/perform(seconds_per_tick, datum/ai_controller/controller, target_key, hiding_location_key)
+	var/atom/target = controller.blackboard[target_key]
+	if(QDELETED(target))
+		finish_action(controller, succeeded = FALSE, target_key = target_key, hiding_location_key = hiding_location_key)
+	var/mob/living/living_pawn = controller.pawn
+	living_pawn.RangedAttack(target)
+	return ..()
+
