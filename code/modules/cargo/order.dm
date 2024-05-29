@@ -21,6 +21,8 @@
 	if(!manifest_can_fail)
 		return
 
+	//MONKESTATION EDIT START - Move Cargo logs to new JSON logging system
+	/*
 	if(prob(MANIFEST_ERROR_CHANCE))
 		errors |= MANIFEST_ERROR_NAME
 		investigate_log("Supply order #[order_id] generated a manifest with an incorrect station name.", INVESTIGATE_CARGO)
@@ -30,6 +32,22 @@
 	if(prob(MANIFEST_ERROR_CHANCE))
 		errors |= MANIFEST_ERROR_ITEM
 		investigate_log("Supply order #[order_id] generated with incorrect contents shipped.", INVESTIGATE_CARGO)
+	*/ //MONKESTATION EDIT ORIGINAL
+	var/list/manifest_errors = list()
+	var/index = 1
+	if(prob(MANIFEST_ERROR_CHANCE))
+		errors |= MANIFEST_ERROR_NAME
+		manifest_errors["[index++]"] = "incorrect station name"
+	if(prob(MANIFEST_ERROR_CHANCE))
+		errors |= MANIFEST_ERROR_CONTENTS
+		manifest_errors["[index++]"] = "incorrectly-listed contents"
+	if(prob(MANIFEST_ERROR_CHANCE))
+		errors |= MANIFEST_ERROR_ITEM
+		manifest_errors["[index++]"] = "missing contents"
+
+	if(errors)
+		log_cargo_manifest("Supply order #[order_id] generated a manifest with errors", manifest_errors)
+	//MONKESTATION EDIT END
 
 /obj/item/paper/fluff/jobs/cargo/manifest/proc/is_approved()
 	return LAZYLEN(stamp_cache) && !is_denied()

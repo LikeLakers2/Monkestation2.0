@@ -23,6 +23,9 @@ LOG_ADMINCHAT
 ## log attack messages
 LOG_ATTACK
 
+## log cargo events
+LOG_CARGO
+
 ## log economy actions
 LOG_ECON
 
