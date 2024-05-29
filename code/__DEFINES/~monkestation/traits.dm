@@ -19,6 +19,10 @@
 /// Station trait for when the clown has bridge access *shudders*
 #define STATION_TRAIT_CLOWN_BRIDGE "clown_bridge"
 
+// /atom
+/// Disables all tool item actions (both primary and secondary) on this atom.
+#define TRAIT_DISABLE_ALL_TOOL_ACTS "no_tool_act"
+
 // /obj/item
 /// Whether a storage item can be compressed by the bluespace compression kit, without the usual storage limitation.
 #define TRAIT_BYPASS_COMPRESS_CHECK "can_compress_anyways"

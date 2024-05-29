@@ -6347,6 +6347,7 @@
 #include "monkestation\code\modules\ghost_players\arena\arena_assets\statues.dm"
 #include "monkestation\code\modules\ghost_players\arena\arena_assets\water.dm"
 #include "monkestation\code\modules\ghost_players\job_helpers\_centcom_item_spawner.dm"
+#include "monkestation\code\modules\ghost_players\job_helpers\engineering_helper.dm"
 #include "monkestation\code\modules\ghost_players\job_helpers\firing_range_helper.dm"
 #include "monkestation\code\modules\ghost_players\job_helpers\food_machine.dm"
 #include "monkestation\code\modules\ghost_players\job_helpers\hydroponics_helper.dm"

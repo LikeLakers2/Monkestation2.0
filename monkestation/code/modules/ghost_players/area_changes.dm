@@ -52,6 +52,25 @@
 	icon_state = "centcom_botany"
 	area_flags = UNIQUE_AREA | NOTELEPORT | GHOST_AREA
 
+/// The centcom engineering areas, for letting people mess about with engineering tools
+/area/centcom/central_command_areas/engineering
+	name = "Centcom Engineering"
+	icon = 'monkestation/icons/area/areas_centcom.dmi'
+	icon_state = "centcom_engineering"
+	area_flags = UNIQUE_AREA | NOTELEPORT | GHOST_AREA | PASSIVE_AREA
+
+/// The area used before and after the transit tubes, meant as a intermediary between Centcom
+/// Engineering and the rest of Centcom.
+///
+/// In-universe, the two transit areas are connected by transit tubes, both to reduce costs and to
+/// show off engineering's prowess. Alongside the transit tube is a catwalk, meant to allow for
+/// transit tube maintenance, and doubly serving as an alternative route to/from the engineering
+/// area, should Centcom's power go out.
+/area/centcom/central_command_areas/engineering/transit
+	name = "Centcom Engineering Transit"
+	icon_state = "centcom_engineering_transit"
+	area_flags = UNIQUE_AREA | NOTELEPORT | GHOST_AREA | PASSIVE_AREA
+
 /area/centcom/central_command_areas/hall
 	name = "Centcom Hall"
 	icon = 'monkestation/icons/area/areas_centcom.dmi'
@@ -140,3 +159,46 @@
 
 	if(should_teleport)
 		ghost.move_to_ghostspawn()
+
+// Area used for space near centcom, where we might want lighting.
+/area/space/nearstation/centcom
+	name = "Space (near Centcom)"
+	area_flags = UNIQUE_AREA | NOTELEPORT | GHOST_AREA | PASSIVE_AREA
+
+/area/space/nearstation/centcom/Initialize(mapload)
+	. = ..()
+	// The code I want to run worked when I placed it here - but I don't want to rely on turfs being
+	// initialized before areas. So, I'm going to run it in late-initialization, even if it means it
+	// takes a bit longer to be fully ready.
+	return INITIALIZE_HINT_LATELOAD
+
+/area/space/nearstation/centcom/LateInitialize()
+	. = ..()
+	// By this point, the area is already colored like it's lit by starlight, and fullbright
+	// overlays have been applied. However, for the centcom areas, we want to include lights, and
+	// those are not handled properly if the turfs are still considered space_lit.
+	for(var/turf/T in src)
+		T.space_lit = FALSE
+		//T.force_setup_lighting()
+		T.lighting_build_overlay()
+
+// /turf/proc/force_setup_lighting()
+//	SETUP_SMOOTHING()
+//	if (smoothing_flags & (SMOOTH_CORNERS|SMOOTH_BITMASK))
+//		QUEUE_SMOOTH(src)
+
+// Variant that prevents ghosts during the round.
+/area/space/nearstation/centcom/no_ghosts_during_round
+	area_flags = UNIQUE_AREA | NOTELEPORT | GHOST_AREA | PASSIVE_AREA | NO_GHOSTS_DURING_ROUND
+
+/*
+/obj/effect/mapping_helpers/force_lighting
+	late = TRUE
+
+/obj/effect/mapping_helpers/force_lighting/LateInitialize()
+	. = ..()
+	var/turf/where = get_turf(src)
+	if(where)
+		where.update_light()
+	qdel(src)
+*/

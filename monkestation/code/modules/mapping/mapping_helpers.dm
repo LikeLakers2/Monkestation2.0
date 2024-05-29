@@ -77,3 +77,28 @@
 
 /obj/effect/mapping_helpers/airlock/proc/payload_windoor(obj/machinery/door/window/windoor)
 	return
+
+/// Injects `inject_flags` into an atom's `resistance_flags`.
+/obj/effect/mapping_helpers/atom_injector/resistance_flag
+	name = "Resistance Flag Injector"
+	icon = 'monkestation/icons/effects/mapping_helpers.dmi'
+	icon_state = "resistance_flag_injector"
+	var/inject_flags = NONE
+
+/obj/effect/mapping_helpers/atom_injector/resistance_flag/inject(atom/target)
+	if(!istype(target))
+		return
+	target.resistance_flags |= inject_flags
+
+/// A variant of the resistance flag injector that has resistance flags preset to prevent an atom's
+/// destruction via bashing, lava, or other destructive means. (Note that this does not prevent an
+/// atom from being deconstructed by tools.)
+/obj/effect/mapping_helpers/atom_injector/resistance_flag/prevent_destruction
+	icon_state = "prevent_destruction"
+	inject_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
+
+/// A variant of the trait injector which will disable all tool acts on the injected atoms.
+/obj/effect/mapping_helpers/atom_injector/trait_injector/prevent_tool_act
+	icon = 'monkestation/icons/effects/mapping_helpers.dmi'
+	icon_state = "prevent_tool_act"
+	trait_name = TRAIT_DISABLE_ALL_TOOL_ACTS

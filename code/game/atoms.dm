@@ -1551,6 +1551,10 @@
  * Must return  parent proc ..() in the end if overridden
  */
 /atom/proc/tool_act(mob/living/user, obj/item/tool, tool_type, is_right_clicking)
+	// MONKESTATION ADDITION START - Ability to disable tool acts on an atom
+	if(HAS_TRAIT(src, TRAIT_DISABLE_ALL_TOOL_ACTS))
+		return TOOL_ACT_SIGNAL_BLOCKING
+	// MONKESTATION ADDITION END
 	var/act_result
 	var/signal_result
 
