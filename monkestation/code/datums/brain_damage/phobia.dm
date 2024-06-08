@@ -52,6 +52,10 @@
 	else if(!suppressed && previous_suppressed)
 		to_chat(owner, span_bolddanger("[suppression_info["unsuppression_message"]]"))
 
+/datum/brain_trauma/mild/phobia/on_clone()
+	if(clonable)
+		return new type(phobia_type)
+
 /datum/brain_trauma/mild/phobia/on_gain()
 	. = ..()
 	if(!QDELETED(owner?.mind))
