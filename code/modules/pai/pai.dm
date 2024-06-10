@@ -29,26 +29,32 @@
 	radio = /obj/item/radio/headset/silicon/pai
 	worn_slot_flags = ITEM_SLOT_HEAD
 
+	/* //MONKESTATION REMOVAL START - Holoshells have been datumized
 	/// If someone has enabled/disabled the pAIs ability to holo
 	var/can_holo = TRUE
+	*/ //MONKESTATION REMOVAL END
 	/// Whether this pAI can recieve radio messages
 	var/can_receive = TRUE
 	/// Whether this pAI can transmit radio messages
 	var/can_transmit = TRUE
 	/// The card we inhabit
 	var/obj/item/pai_card/card
+	/* //MONKESTATION REMOVAL START - Holoshells have been datumized
 	/// The current chasis that will appear when in holoform
 	var/chassis = "repairbot"
+	*/ //MONKESTATION REMOVAL END
 	/// Toggles whether the pAI can hold encryption keys or not
 	var/encrypt_mod = FALSE
 	/// The cable we produce when hacking a door
 	var/obj/item/pai_cable/hacking_cable
+	/* //MONKESTATION REMOVAL START - Holoshells have been datumized
 	/// The current health of the holochassis
 	var/holochassis_health = 20
 	/// Holochassis available to use
 	var/holochassis_ready = FALSE
 	/// Whether we are currently holoformed
 	var/holoform = FALSE
+	*/ //MONKESTATION REMOVAL END
 	/// Installed software on the pAI
 	var/list/installed_software = list()
 	/// Toggles whether universal translator has been activated. Cannot be reversed
@@ -103,6 +109,7 @@
 		"Internal GPS" = 35,
 		"Universal Translator" = 35,
 	)
+	/* //MONKESTATION REMOVAL START - Holoshells have been datumized
 	/// List of all possible chasises. TRUE means the pAI can be picked up in this chasis.
 	var/static/list/possible_chassis = list(
 		"bat" = FALSE,
@@ -124,6 +131,7 @@
 		"puppy" = FALSE,
 		"spider" = FALSE,
 	)
+	*/ //MONKESTATION REMOVAL END
 	/// List of all available card overlays.
 	var/static/list/possible_overlays = list(
 		"null",
