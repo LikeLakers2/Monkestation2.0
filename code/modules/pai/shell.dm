@@ -1,12 +1,15 @@
+/* //MONKESTATION REMOVAL START - Holoshells have been refactored
 /mob/living/silicon/pai/mob_try_pickup(mob/living/user, instant=FALSE)
 	if(!possible_chassis[chassis])
 		to_chat(user, span_warning("[src]'s current form isn't able to be carried!"))
 		return FALSE
 	return ..()
+*/ //MONKESTATION REMOVAL END
 
 /mob/living/silicon/pai/start_pulling(atom/movable/thing, state, force = move_force, supress_message = FALSE)
 	return FALSE
 
+/* //MONKESTATION REMOVAL START - Holoshells have been refactored
 /mob/living/silicon/pai/update_resting()
 	. = ..()
 	if(resting)
@@ -15,6 +18,7 @@
 		icon_state = "[chassis]"
 	if(loc != card)
 		visible_message(span_notice("[src] [resting? "lays down for a moment..." : "perks up from the ground."]"))
+*/ //MONKESTATION REMOVAL END
 
 /mob/living/silicon/pai/wabbajack(what_to_randomize, change_flags = WABBAJACK)
 	if(length(possible_chassis) < 2)
@@ -146,6 +150,7 @@
 	holoform = TRUE
 	return TRUE
 
+/* //MONKESTATION REMOVAL START - Holoshells have been refactored
 /**
  * Sets the holochassis skin and updates the icons
  *
@@ -161,6 +166,7 @@
 	held_state = "[chassis]"
 	desc = "A pAI mobile hard-light holographics emitter. This one appears in the form of a [chassis]."
 	return TRUE
+*/ //MONKESTATION REMOVAL END
 
 /**
  * Toggles the onboard light
