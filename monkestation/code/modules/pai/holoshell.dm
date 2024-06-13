@@ -42,8 +42,6 @@
 	else
 		src.icon_state = src.current_holoshell.icon_state_prefix
 
-// TODO: Should probably move these two (on_lying_down, on_standing_up) to a signal handler for
-// COMSIG_LIVING_RESTING, so I can take advantage of knowing if these should be silent
 /mob/living/silicon/pai/on_lying_down()
 	. = ..()
 	if(loc != card)

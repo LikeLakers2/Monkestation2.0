@@ -1,3 +1,4 @@
+/* //MONKESTATION REMOVAL START - These actions have been phased out for a while...
 /datum/action/innate/pai
 	name = "PAI Action"
 	button_icon = 'icons/mob/actions/actions_silicon.dmi'
@@ -61,3 +62,4 @@
 /datum/action/innate/pai/light/Trigger(trigger_flags)
 	..()
 	pai_owner.toggle_integrated_light()
+*/ //MONKESTATION REMOVAL END
