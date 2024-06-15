@@ -29,7 +29,7 @@
 	radio = /obj/item/radio/headset/silicon/pai
 	worn_slot_flags = ITEM_SLOT_HEAD
 
-	/* //MONKESTATION REMOVAL START - Holoshells have been datumized
+	/* //MONKESTATION REMOVAL START - pAIs are being refactored
 	/// If someone has enabled/disabled the pAIs ability to holo
 	var/can_holo = TRUE
 	*/ //MONKESTATION REMOVAL END
@@ -39,7 +39,7 @@
 	var/can_transmit = TRUE
 	/// The card we inhabit
 	var/obj/item/pai_card/card
-	/* //MONKESTATION REMOVAL START - Holoshells have been datumized
+	/* //MONKESTATION REMOVAL START - pAIs are being refactored
 	/// The current chasis that will appear when in holoform
 	var/chassis = "repairbot"
 	*/ //MONKESTATION REMOVAL END
@@ -47,7 +47,7 @@
 	var/encrypt_mod = FALSE
 	/// The cable we produce when hacking a door
 	var/obj/item/pai_cable/hacking_cable
-	/* //MONKESTATION REMOVAL START - Holoshells have been datumized
+	/* //MONKESTATION REMOVAL START - pAIs are being refactored
 	/// The current health of the holochassis
 	var/holochassis_health = 20
 	/// Holochassis available to use
@@ -109,7 +109,7 @@
 		"Internal GPS" = 35,
 		"Universal Translator" = 35,
 	)
-	/* //MONKESTATION REMOVAL START - Holoshells have been datumized
+	/* //MONKESTATION REMOVAL START - pAIs are being refactored
 	/// List of all possible chasises. TRUE means the pAI can be picked up in this chasis.
 	var/static/list/possible_chassis = list(
 		"bat" = FALSE,
@@ -189,7 +189,7 @@
 /mob/living/silicon/pai/emag_act(mob/user)
 	return handle_emag(user)
 
-/* //MONKESTATION REMOVAL START - Holoshells have been refactored
+/* //MONKESTATION REMOVAL START - pAIs are being refactored
 /mob/living/silicon/pai/examine(mob/user)
 	. = ..()
 	. += "Its master ID string seems to be [(!master_name || emagged) ? "empty" : master_name]."

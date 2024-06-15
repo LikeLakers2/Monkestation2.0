@@ -1,4 +1,4 @@
-/* //MONKESTATION REMOVAL START - Holoshells have been refactored
+/* //MONKESTATION REMOVAL START - pAIs are being refactored
 /mob/living/silicon/pai/mob_try_pickup(mob/living/user, instant=FALSE)
 	if(!possible_chassis[chassis])
 		to_chat(user, span_warning("[src]'s current form isn't able to be carried!"))
@@ -9,7 +9,7 @@
 /mob/living/silicon/pai/start_pulling(atom/movable/thing, state, force = move_force, supress_message = FALSE)
 	return FALSE
 
-/* //MONKESTATION REMOVAL START - Holoshells have been refactored
+/* //MONKESTATION REMOVAL START - pAIs are being refactored
 /mob/living/silicon/pai/update_resting()
 	. = ..()
 	if(resting)
@@ -150,7 +150,7 @@
 	holoform = TRUE
 	return TRUE
 
-/* //MONKESTATION REMOVAL START - Holoshells have been refactored
+/* //MONKESTATION REMOVAL START - pAIs are being refactored
 /**
  * Sets the holochassis skin and updates the icons
  *
