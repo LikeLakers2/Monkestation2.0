@@ -189,9 +189,11 @@
 /mob/living/silicon/pai/emag_act(mob/user)
 	return handle_emag(user)
 
+/* //MONKESTATION REMOVAL START - Holoshells have been refactored
 /mob/living/silicon/pai/examine(mob/user)
 	. = ..()
 	. += "Its master ID string seems to be [(!master_name || emagged) ? "empty" : master_name]."
+*/ //MONKESTATION REMOVAL END
 
 /mob/living/silicon/pai/get_status_tab_items()
 	. += ..()

@@ -15,32 +15,11 @@
 	// ORIGINAL: mob.holoform
 	var/holo_in_use = FALSE
 
-/mob/living/silicon/pai/proc/set_holochassis(datum/pai_holoshell/choice)
-	if(!choice)
-		return FALSE
-	src.current_holoshell = choice
-	src.icon = choice.normal_icon
-	src.held_lh = choice.held_lh_icon
-	src.held_rh = choice.held_rh_icon
-	src.held_state = choice.icon_state_prefix
-	src.head_icon = choice.worn_head_icon
-	// Apply the new holoshell's icon states
-	src.update_appearance()
-	src.update_resting()
-	// TODO: Should probably change this description to be dynamic...
-	desc = "A pAI mobile hard-light holographics emitter. This one appears in the form of a [lowertext(choice.name)]."
-	return TRUE
-
-/mob/living/silicon/pai/update_appearance(updates)
+/mob/living/silicon/pai/examine(mob/user)
 	. = ..()
-	src.update_resting()
-
-/mob/living/silicon/pai/update_resting()
-	. = ..()
-	if(src.resting)
-		src.icon_state = "[src.current_holoshell.icon_state_prefix]_rest"
-	else
-		src.icon_state = src.current_holoshell.icon_state_prefix
+	. += "This one appears in the form of a [lowertext(src.current_holoshell.name)]."
+	// TODO: Need to move master name to the card, me thinks.
+	. += "Its master ID string seems to be [(!master_name || emagged) ? "empty" : master_name]."
 
 /mob/living/silicon/pai/on_lying_down()
 	. = ..()
@@ -56,3 +35,39 @@
 		to_chat(user, span_warning("[src]'s current form isn't able to be carried!"))
 		return FALSE
 	return ..()
+
+/mob/living/silicon/pai/update_appearance(updates)
+	. = ..()
+	src.update_resting()
+
+/mob/living/silicon/pai/update_resting()
+	. = ..()
+	if(src.resting)
+		src.icon_state = "[src.current_holoshell.icon_state_prefix]_rest"
+	else
+		src.icon_state = src.current_holoshell.icon_state_prefix
+
+/mob/living/silicon/pai/wabbajack(what_to_randomize, change_flags = WABBAJACK)
+	var/list/chassis_options = subtypesof(/datum/pai_holoshell) - src.current_holoshell.type
+	if(length(chassis_options) < 2)
+		// This branch should never be taken unless something is messy with BYOND.
+		return FALSE
+	var/datum/pai_holoshell/new_shell = pick(chassis_options)
+	set_holochassis(new_shell)
+	balloon_alert(src, "[new_shell] composite engaged")
+	return TRUE
+
+/mob/living/silicon/pai/proc/set_holochassis(datum/pai_holoshell/shell_typepath)
+	if(!shell_typepath)
+		return FALSE
+	var/datum/pai_holoshell/shell_instance = new shell_typepath
+	src.current_holoshell = shell_instance
+	src.icon = shell_instance.normal_icon
+	src.held_lh = shell_instance.held_lh_icon
+	src.held_rh = shell_instance.held_rh_icon
+	src.held_state = shell_instance.icon_state_prefix
+	src.head_icon = shell_instance.worn_head_icon
+	// Apply the new holoshell's icon states
+	src.update_appearance()
+	src.update_resting()
+	return TRUE

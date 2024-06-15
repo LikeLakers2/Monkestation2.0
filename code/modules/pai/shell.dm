@@ -18,7 +18,6 @@
 		icon_state = "[chassis]"
 	if(loc != card)
 		visible_message(span_notice("[src] [resting? "lays down for a moment..." : "perks up from the ground."]"))
-*/ //MONKESTATION REMOVAL END
 
 /mob/living/silicon/pai/wabbajack(what_to_randomize, change_flags = WABBAJACK)
 	if(length(possible_chassis) < 2)
@@ -27,6 +26,7 @@
 	set_holochassis(holochassis)
 	balloon_alert(src, "[holochassis] composite engaged")
 	return TRUE
+*/ //MONKESTATION REMOVAL END
 
 /**
  * Checks if we are allowed to interact with a radial menu
