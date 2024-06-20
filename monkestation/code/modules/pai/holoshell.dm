@@ -57,6 +57,12 @@
 	balloon_alert(src, "[new_shell] composite engaged")
 	return TRUE
 
+/// Sets the pAI's holochassis, changing its current appearance if it's already folded out.
+///
+/// @param {/datum/pai_holoshell} shell_typepath - A typepath to the holoshell we want to set our
+/// holochassis to.
+///
+/// @returns {boolean} - TRUE if the holochassis was set successfully. FALSE otherwise.
 /mob/living/silicon/pai/proc/set_holochassis(datum/pai_holoshell/shell_typepath)
 	if(!shell_typepath)
 		return FALSE
