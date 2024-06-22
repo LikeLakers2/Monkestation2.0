@@ -1,3 +1,4 @@
+// WORKING FILE: MAKE SURE THIS IS REMOVED AT THE END
 #define SIGNAL_ADDTRAIT(trait_ref) "addtrait [trait_ref]"
 #define SIGNAL_REMOVETRAIT(trait_ref) "removetrait [trait_ref]"
 

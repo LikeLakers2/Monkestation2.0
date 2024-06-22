@@ -1,3 +1,4 @@
+// WORKING FILE: MAKE SURE THIS IS REMOVED AT THE END
 /*
 	FUN ZONE OF ADMIN LISTINGS
 	Try to keep this in sync with __DEFINES/traits.dm
