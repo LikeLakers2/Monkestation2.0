@@ -262,20 +262,6 @@
 #define SPEAKING_FROM_HANDS "hands"
 
 #define GLUED_ITEM_TRAIT "glued-item"
-
-//monkestation edit start
-/// One can breath under water, you get me?
-#define TRAIT_WATER_BREATHING "water_breathing"
-
-/// Does not take damage from bloodloss(or any blood shenanigans)
-#define TRAIT_NO_BLOODLOSS_DAMAGE "no_bloodloss_damage"
-
-/// Do IPC's dream of doomsday? The answer is yes
-#define TRAIT_ROBOT_CAN_BLEED "robots_can_bleed"
-
-/// tough feets for the satyrs
-#define TRAIT_HARD_SOLES "hard_soles" //Taken from Skyrat
-//monkestation edit end
 // unique trait sources, still defines
 #define EMP_TRAIT "emp_trait"
 
