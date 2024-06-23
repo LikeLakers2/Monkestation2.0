@@ -37,8 +37,6 @@
 #define CULT_TRAIT "cult"
 #define LICH_TRAIT "lich"
 
-/// From [/datum/element/elevation] for purpose of registering/removing signals and detaching the elevation_core when the trait is absent.
-#define TRAIT_TURF_HAS_ELEVATED_OBJ(z) "turf_has_elevated_obj_[z]"
 #define ABSTRACT_ITEM_TRAIT "abstract-item"
 /// A trait given by any status effect
 #define STATUS_EFFECT_TRAIT "status-effect"
