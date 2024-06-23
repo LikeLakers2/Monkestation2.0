@@ -260,8 +260,6 @@
 #define SPEAKING_FROM_TONGUE "tongue"
 ///trait source that sign language should use
 #define SPEAKING_FROM_HANDS "hands"
-/// this object cannot have its export value be shown by export scanner (shows as unknown)
-#define TRAIT_HIDDEN_EXPORT_VALUE "hiddenexportvalue"
 
 #define GLUED_ITEM_TRAIT "glued-item"
 
@@ -278,45 +276,7 @@
 /// tough feets for the satyrs
 #define TRAIT_HARD_SOLES "hard_soles" //Taken from Skyrat
 //monkestation edit end
-/// This atom can have spells cast from it if a mob is within it
-/// This means the "caster" of the spell is changed to the mob's loc
-/// Note this doesn't mean all spells are guaranteed to work or the mob is guaranteed to cast
-#define TRAIT_CASTABLE_LOC "castable_loc"
-
-///Trait given by /datum/element/relay_attacker
-#define TRAIT_RELAYING_ATTACKER "relaying_attacker"
 // unique trait sources, still defines
 #define EMP_TRAIT "emp_trait"
-
-/// Trait given while using /datum/action/cooldown/mob_cooldown/wing_buffet
-#define TRAIT_WING_BUFFET "wing_buffet"
-/// Trait given while tired after using /datum/action/cooldown/mob_cooldown/wing_buffet
-#define TRAIT_WING_BUFFET_TIRED "wing_buffet_tired"
-/// Trait given to a dragon who fails to defend their rifts
-#define TRAIT_RIFT_FAILURE "fail_dragon_loser"
-
-///trait determines if this mob can breed given by /datum/component/breeding
-#define TRAIT_MOB_BREEDER "mob_breeder"
-
-/// Trait determines if this mob has examined an eldritch painting
-#define TRAIT_ELDRITCH_PAINTING_EXAMINE "eldritch_painting_examine"
-
-/// Trait used by the /datum/brain_trauma/severe/flesh_desire trauma to change their preferences of what they eat
-#define TRAIT_FLESH_DESIRE "flesh_desire"
-
-///trait given to food that can be baked by /datum/component/bakeable
-#define TRAIT_BAKEABLE "bakeable"
-
-/// Trait given to foam darts that have an insert in them
-#define TRAIT_DART_HAS_INSERT "dart_has_insert"
-
-///Trait granted by janitor skillchip, allows communication with cleanbots
-#define TRAIT_CLEANBOT_WHISPERER "cleanbot_whisperer"
-
-/// Trait given when a mob is currently in invisimin mode
-#define TRAIT_INVISIMIN "invisimin"
-
-///Trait given when a mob has been tipped
-#define TRAIT_MOB_TIPPED "mob_tipped"
 
 // END TRAIT DEFINES
