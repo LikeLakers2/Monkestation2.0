@@ -3,4 +3,5 @@
 
 // BEGIN_INCLUDE
 #include "linked_xenobio_pens.dm"
+#include "unit_test.dm"
 // END_INCLUDE
