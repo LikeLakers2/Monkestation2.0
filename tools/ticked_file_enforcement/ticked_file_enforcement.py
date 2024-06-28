@@ -70,15 +70,15 @@ if on_github:
     print(f"::group::Ticked File Enforcement [{includes_file}]")
 print(f"Processing `{includes_file}`...")
 
-# Check for excluded files that don't exist.
-should_exit = False
-for unincluded_file_path in unincluded_files:
-    full_file_path = base_scanning_directory + unincluded_file_path
-    if not os.path.isfile(full_file_path):
-        post_error(f"`{full_file_path}` is excluded, but does not exist. It should be removed.")
-        should_exit = True
-if should_exit:
-    sys.exit(1)
+# Create our list of excluded files.
+files_not_included = []
+for unincluded_file_glob in unincluded_files:
+    full_file_glob = base_scanning_directory + unincluded_file_glob
+    file_list = glob.glob(full_file_glob, recursive=True)
+    if len(file_list) == 0:
+        post_warn(f"`{full_file_glob}` is excluded, but does not match any files.")
+        continue
+    files_not_included.extend(file_list)
 
 # Get the list of files that `includes_file` already has
 includes_to_check = []

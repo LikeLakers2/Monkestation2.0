@@ -1,9 +1,9 @@
 {
-	"includes_file": "tools/ticked_file_enforcement/tests/errors/nonexistent_exclude.dme",
+	"includes_file": "tools/ticked_file_enforcement/tests/warnings/unincluded_glob_matches_no_files.dme",
 	"base_scanning_directory": "tools/ticked_file_enforcement/tests/",
 	"check_subdirectories": false,
 	"unincluded_files": [
-		"this_file_should_not_exist"
+		"this*glob*does*not*exist"
 	],
 	"forbidden_includes": []
 }
