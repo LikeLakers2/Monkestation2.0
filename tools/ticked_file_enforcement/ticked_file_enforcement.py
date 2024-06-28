@@ -82,16 +82,20 @@ if not base_scanning_directory.startswith(includes_file_directory):
     post_error(f"The base scanning directory is not in the same directory or a subdirectory as the includes file.")
     sys.exit(1)
 
-# Get the list of files that `includes_file` already has
+# Get the list of files that are included in `includes_file`
 includes_found = []
 with open(includes_file, 'r') as file:
+    # Marks if we've ever seen a BEGIN_INCLUDE
     encountered_include_area = False
+    # Marks if we've passed a BEGIN_INCLUDE but not an associated END_INCLUDE
     inside_include_area = False
+    # The number of lines between BEGIN_INCLUDE and END_INCLUDE that we've ignored.
     ignored_line_count = 0
 
     for line in file:
         line = line.strip()
         if line == "// BEGIN_INCLUDE":
+            # If we're already inside the include area, we shouldn't be seeing a BEGIN_INCLUDE
             if inside_include_area:
                 post_warn(f"Unexpected nested instance of BEGIN_INCLUDE encountered.")
             encountered_include_area = True
@@ -99,6 +103,7 @@ with open(includes_file, 'r') as file:
             continue
 
         if line == "// END_INCLUDE":
+            # If we're already outside the include area, we shouldn't be seeing a END_INCLUDE
             if not inside_include_area:
                 post_warn(f"Unexpected END_INCLUDE encountered.")
             inside_include_area = False
@@ -111,9 +116,9 @@ with open(includes_file, 'r') as file:
             file_path = file_path.removeprefix("#include")
             # Strip any whitepsace from both sides.
             file_path = file_path.strip()
-            # Next, our file path is everything between the beginning and end quotes.
+            # Our file path is everything between the beginning and end quotes.
             file_path = file_path[1:-1]
-            # And lastly, prepend the DME's directory.
+            # Finally, prepend the DME's directory.
             file_path = includes_file_directory + file_path
             includes_found.append(file_path)
             continue
@@ -122,10 +127,12 @@ with open(includes_file, 'r') as file:
         # ignored.
         ignored_line_count += 1
 
+    # If we never entered the include area, then we never encountered a BEGIN_INCLUDE marker.
     if not encountered_include_area:
         post_error(f"Missing BEGIN_INCLUDE marker.")
         sys.exit(1)
 
+    # If we are still inside the include area, then we never encountered a END_INCLUDE marker.
     if inside_include_area:
         post_error(f"Missing END_INCLUDE marker.")
         sys.exit(1)
@@ -148,6 +155,7 @@ for unincluded_file_glob in unincluded_file_globs:
     unincluded_file_list.extend(file_list)
 
 # Find any files marked as intentionally unincluded, that are included anyways.
+# This is not erroneous input, but we warn against it anyways.
 unincluded_yet_included = filter(find_in_includes, unincluded_file_list)
 for file_path in unincluded_yet_included:
     post_warn(f"`{file_path}` is marked as intentionally unincluded, yet was found in the includes file anyways.")
