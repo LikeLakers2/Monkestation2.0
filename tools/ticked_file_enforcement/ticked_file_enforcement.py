@@ -1,4 +1,3 @@
-import codecs
 import fnmatch
 import functools
 import glob
