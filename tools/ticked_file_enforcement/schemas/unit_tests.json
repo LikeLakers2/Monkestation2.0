@@ -18,5 +18,7 @@
 		"monkey_business.dm",
 		"rev_conversion.dm"
 	],
-	"forbidden_includes": []
+	"forbidden_includes": [
+		"code/modules/unit_tests/~monkestation/[!_]*.dm"
+	]
 }

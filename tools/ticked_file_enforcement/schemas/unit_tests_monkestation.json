@@ -1,0 +1,7 @@
+{
+	"file": "code/modules/unit_tests/~monkestation/_unit_tests.dm",
+	"scannable_directory": "code/modules/unit_tests/~monkestation/",
+	"subdirectories": false,
+	"excluded_files": [],
+	"forbidden_includes": []
+}
