@@ -2,8 +2,8 @@
 	"includes_file": "tools/ticked_file_enforcement/tests/warnings/unincluded_glob_matches_no_files.dme",
 	"base_scanning_directory": "tools/ticked_file_enforcement/tests/",
 	"check_subdirectories": false,
-	"unincluded_files": [
+	"unincluded_file_globs": [
 		"this*glob*does*not*exist"
 	],
-	"forbidden_includes": []
+	"forbidden_include_globs": []
 }

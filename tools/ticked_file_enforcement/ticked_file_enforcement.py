@@ -38,12 +38,12 @@ check_subdirectories = schema["check_subdirectories"]
 # (Array of strings: File pathname patterns) File paths within `base_scanning_directory` that are
 # intentionally not included in `includes_file`. It is NOT an error for a file matching one of these
 # patterns to be included in `includes_file`, but we will warn regardless.
-unincluded_files = schema["unincluded_files"]
+unincluded_file_globs = schema["unincluded_file_globs"]
 
 # (Array of strings: File pathname patterns) File paths that are not allowed to be included in
 # `includes_file`. It is an error for a file matching one of these patterns to be included in
 # `includes_file`.
-forbidden_includes = schema["forbidden_includes"]
+forbidden_include_globs = schema["forbidden_include_globs"]
 ### END SCHEMA ###
 
 def post_ok(string):
@@ -118,7 +118,7 @@ if len(includes_found) == 0:
 
 # Create our list of excluded files.
 unincluded_file_list = []
-for unincluded_file_glob in unincluded_files:
+for unincluded_file_glob in unincluded_file_globs:
     full_file_glob = base_scanning_directory + unincluded_file_glob
     file_list = glob.glob(full_file_glob, recursive=True)
     if len(file_list) == 0:
