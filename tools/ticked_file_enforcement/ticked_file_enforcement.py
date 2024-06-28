@@ -150,7 +150,7 @@ for unincluded_file_glob in unincluded_file_globs:
     full_file_glob = base_scanning_directory + unincluded_file_glob
     file_list = glob.glob(full_file_glob, recursive=True)
     if len(file_list) == 0:
-        post_warn(f"`{full_file_glob}` is excluded, but does not match any files.")
+        post_warn(f"The unincluded file glob `{full_file_glob}` does not match any files.")
         continue
     unincluded_file_list.extend(file_list)
 
@@ -158,7 +158,7 @@ for unincluded_file_glob in unincluded_file_globs:
 # This is not erroneous input, but we warn against it anyways.
 unincluded_yet_included = filter(find_in_includes, unincluded_file_list)
 for file_path in unincluded_yet_included:
-    post_warn(f"`{file_path}` is marked as intentionally unincluded, yet was found in the includes file anyways.")
+    post_warn(f"The file path `{file_path}` matched a unincluded file glob, but was found in the includes file.")
 
 if on_github:
     print(f"::endgroup::")
