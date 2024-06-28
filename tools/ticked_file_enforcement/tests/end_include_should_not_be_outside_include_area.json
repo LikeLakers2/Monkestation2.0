@@ -1,5 +1,5 @@
 {
-	"includes_file": "tools/ticked_file_enforcement/tests/warn_if_end_include_without_begin_include.dme",
+	"includes_file": "tools/ticked_file_enforcement/tests/end_include_should_not_be_outside_include_area.dme",
 	"base_scanning_directory": "tools/ticked_file_enforcement/tests/",
 	"check_subdirectories": false,
 	"unincluded_file_globs": [],
