@@ -76,27 +76,52 @@ for unincluded_file_path in unincluded_files:
 if should_exit:
     sys.exit(1)
 
-reading = False
-lines = []
-total = 0
+# Get the list of files that `includes_file` already has
+lines_to_parse = []
+with open(includes_file, 'r') as file:
+    encountered_include_area = False
+    inside_include_area = False
+    ignored_line_count = 0
 
-with open(file_reference, 'r') as file:
     for line in file:
-        total += 1
         line = line.strip()
-
         if line == "// BEGIN_INCLUDE":
-            reading = True
-            continue
-        elif line == "// END_INCLUDE":
-            break
-        elif not reading:
+            if inside_include_area:
+                post_warn(f"Unexpected nested instance of BEGIN_INCLUDE encountered.")
+            encountered_include_area = True
+            inside_include_area = True
             continue
 
-        lines.append(line)
+        if line == "// END_INCLUDE":
+            if not inside_include_area:
+                post_warn(f"Unexpected END_INCLUDE encountered.")
+            inside_include_area = False
+            continue
 
-offset = total - len(lines)
-print(blue(f"Ticked File Enforcement: {offset} lines were ignored in output for [{file_reference}]."))
+        if inside_include_area and line.startswith("#include "):
+            lines_to_parse.append(line)
+            continue
+
+        # If we're here, none of the above branches were taken, so we consider this line to be
+        # ignored.
+        ignored_line_count += 1
+
+    if not encountered_include_area:
+        post_error(f"Missing BEGIN_INCLUDE marker.")
+        sys.exit(1)
+
+    if inside_include_area:
+        post_error(f"Missing END_INCLUDE marker.")
+        sys.exit(1)
+
+    if ignored_line_count != 0:
+        post_notice(f"{ignored_line_count} lines were ignored while processing the includes file.")
+
+if len(lines_to_parse) == 0:
+    post_notice(f"No includes found within the includes file. Exiting.")
+    sys.exit()
+
+
 file_extensions = ("dm", "dmf")
 fail_no_include = False
 

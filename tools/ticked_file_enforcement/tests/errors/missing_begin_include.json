@@ -1,0 +1,7 @@
+{
+	"includes_file": "tools/ticked_file_enforcement/tests/errors/missing_begin_include.dme",
+	"base_scanning_directory": "tools/ticked_file_enforcement/tests/",
+	"check_subdirectories": false,
+	"unincluded_files": [],
+	"forbidden_includes": []
+}
