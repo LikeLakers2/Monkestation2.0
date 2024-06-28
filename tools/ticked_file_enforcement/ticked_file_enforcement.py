@@ -104,8 +104,18 @@ with open(includes_file, 'r') as file:
             inside_include_area = False
             continue
 
-        if inside_include_area and line.startswith("#include "):
-            includes_found.append(line)
+        if inside_include_area and line.startswith("#include \""):
+            # Let's get the file path. First, only take up everything to the first `//` (if it exists)
+            file_path = line.partition("//")[0]
+            # Next, remove the include prefix.
+            file_path = file_path.removeprefix("#include")
+            # Strip any whitepsace from both sides.
+            file_path = file_path.strip()
+            # Next, our file path is everything between the beginning and end quotes.
+            file_path = file_path[1:-1]
+            # And lastly, prepend the DME's directory.
+            file_path = includes_file_directory + file_path
+            includes_found.append(file_path)
             continue
 
         # If we're here, none of the above branches were taken, so we consider this line to be
