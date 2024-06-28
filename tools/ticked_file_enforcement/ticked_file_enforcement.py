@@ -17,6 +17,9 @@ def red(text):
 def blue(text):
     return "\033[34m" + str(text) + "\033[0m"
 
+def yellow(text):
+    return "\033[33m" + str(text) + "\033[0m"
+
 ### BEGIN SCHEMA ###
 schema = json.load(sys.stdin)
 
@@ -43,10 +46,25 @@ unincluded_files = schema["unincluded_files"]
 forbidden_includes = schema["forbidden_includes"]
 ### END SCHEMA ###
 
+def post_ok(string):
+    print(green(f"[{includes_file}]: " + string))
+
 def post_error(string):
-    print(red(f"Ticked File Enforcement [{file_reference}]: " + string))
+    print(red(f"[{includes_file}]: " + string))
     if on_github:
-        print(f"::error file={file_reference},line=1,title=Ticked File Enforcement::{string}")
+        print(f"::error file={includes_file},title=Ticked File Enforcement::{string}")
+
+def post_notice(string):
+    print(blue(f"[{includes_file}]: " + string))
+    if on_github:
+        print(f"::notice file={includes_file},title=Ticked File Enforcement::{string}")
+
+def post_warn(string):
+    print(yellow(f"[{includes_file}]: " + string))
+    if on_github:
+        print(f"::warning file={includes_file},title=Ticked File Enforcement::{string}")
+
+
 
 for excluded_file in excluded_files:
     full_file_path = scannable_directory + excluded_file
