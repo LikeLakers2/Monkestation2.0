@@ -70,15 +70,6 @@ if on_github:
     print(f"::group::Ticked File Enforcement [{includes_file}]")
 print(f"Processing `{includes_file}`...")
 
-# Create our list of excluded files.
-unincluded_file_list = []
-for unincluded_file_glob in unincluded_files:
-    full_file_glob = base_scanning_directory + unincluded_file_glob
-    file_list = glob.glob(full_file_glob, recursive=True)
-    if len(file_list) == 0:
-        post_warn(f"`{full_file_glob}` is excluded, but does not match any files.")
-        continue
-    unincluded_file_list.extend(file_list)
 
 # Get the list of files that `includes_file` already has
 includes_found = []
@@ -125,6 +116,15 @@ if len(includes_found) == 0:
     post_notice(f"No includes found within the includes file. Exiting.")
     sys.exit()
 
+# Create our list of excluded files.
+unincluded_file_list = []
+for unincluded_file_glob in unincluded_files:
+    full_file_glob = base_scanning_directory + unincluded_file_glob
+    file_list = glob.glob(full_file_glob, recursive=True)
+    if len(file_list) == 0:
+        post_warn(f"`{full_file_glob}` is excluded, but does not match any files.")
+        continue
+    unincluded_file_list.extend(file_list)
 if on_github:
     print(f"::endgroup::")
 
