@@ -1,7 +1,0 @@
-{
-	"includes_file": "tools/ticked_file_enforcement/tests/warnings/end_include_without_begin_include.dme",
-	"base_scanning_directory": "tools/ticked_file_enforcement/tests/warnings/",
-	"check_subdirectories": false,
-	"unincluded_file_globs": [],
-	"forbidden_include_globs": []
-}

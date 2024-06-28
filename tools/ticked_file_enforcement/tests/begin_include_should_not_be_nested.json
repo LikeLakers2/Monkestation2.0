@@ -1,0 +1,7 @@
+{
+	"includes_file": "tools/ticked_file_enforcement/tests/begin_include_should_not_be_nested.dme",
+	"base_scanning_directory": "tools/ticked_file_enforcement/tests/",
+	"check_subdirectories": false,
+	"unincluded_file_globs": [],
+	"forbidden_include_globs": []
+}

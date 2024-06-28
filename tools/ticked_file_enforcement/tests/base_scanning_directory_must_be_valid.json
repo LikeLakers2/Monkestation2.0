@@ -1,5 +1,5 @@
 {
-	"includes_file": "tools/ticked_file_enforcement/tests/errors/invalid_base_scanning_directory.dme",
+	"includes_file": "tools/ticked_file_enforcement/tests/base_scanning_directory_must_be_valid.dme",
 	"base_scanning_directory": "not_this_directory/",
 	"check_subdirectories": false,
 	"unincluded_file_globs": [],
