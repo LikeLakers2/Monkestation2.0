@@ -1,0 +1,7 @@
+{
+	"includes_file": "tools/ticked_file_enforcement/tests/errors/invalid_base_scanning_directory.dme",
+	"base_scanning_directory": "not_this_directory/",
+	"check_subdirectories": false,
+	"unincluded_file_globs": [],
+	"forbidden_include_globs": []
+}

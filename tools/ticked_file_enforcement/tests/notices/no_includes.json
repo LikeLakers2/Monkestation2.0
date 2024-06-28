@@ -1,6 +1,6 @@
 {
 	"includes_file": "tools/ticked_file_enforcement/tests/notices/no_includes.dme",
-	"base_scanning_directory": "tools/ticked_file_enforcement/tests/",
+	"base_scanning_directory": "tools/ticked_file_enforcement/tests/notices/",
 	"check_subdirectories": false,
 	"unincluded_file_globs": [],
 	"forbidden_include_globs": []

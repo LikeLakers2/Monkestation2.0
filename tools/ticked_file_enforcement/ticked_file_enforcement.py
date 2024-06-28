@@ -70,6 +70,11 @@ if on_github:
     print(f"::group::Ticked File Enforcement [{includes_file}]")
 print(f"Processing `{includes_file}`...")
 
+# Ticked files should always be in the same directory, or a subdirectory, as the include file.
+includes_file_directory = os.path.dirname(includes_file) + "/"
+if not base_scanning_directory.startswith(includes_file_directory):
+    post_error(f"The base scanning directory is not in the same directory or a subdirectory as the includes file.")
+    sys.exit(1)
 
 # Get the list of files that `includes_file` already has
 includes_found = []
