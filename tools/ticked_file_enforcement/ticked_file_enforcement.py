@@ -17,13 +17,31 @@ def red(text):
 def blue(text):
     return "\033[34m" + str(text) + "\033[0m"
 
+### BEGIN SCHEMA ###
 schema = json.load(sys.stdin)
-file_reference = schema["file"]
-file_reference_basename = os.path.basename(file_reference)
-scannable_directory = schema["scannable_directory"]
-subdirectories = schema["subdirectories"]
-FORBIDDEN_INCLUDES = schema["forbidden_includes"]
-excluded_files = schema["excluded_files"]
+
+# (String: File path) The file that we want to take includes from
+includes_file = schema["includes_file"]
+
+# (String: Directory path) The base directory from which to collect file paths that we want to
+# ensure are included in `includes_file`. Any files in `includes_file` that do not come from this
+# directory are ignored.
+base_scanning_directory = schema["base_scanning_directory"]
+
+# (Boolean) If we should consider the files from subdirectories of `base_scanning_directory`, when
+# generating a list of files that should be within `includes_file`.
+check_subdirectories = schema["check_subdirectories"]
+
+# (Array of strings: File pathname patterns) File paths within `base_scanning_directory` that are
+# intentionally not included in `includes_file`. It is NOT an error for a file matching one of these
+# patterns to be included in `includes_file`, but we will warn regardless.
+unincluded_files = schema["unincluded_files"]
+
+# (Array of strings: File pathname patterns) File paths that are not allowed to be included in
+# `includes_file`. It is an error for a file matching one of these patterns to be included in
+# `includes_file`.
+forbidden_includes = schema["forbidden_includes"]
+### END SCHEMA ###
 
 def post_error(string):
     print(red(f"Ticked File Enforcement [{file_reference}]: " + string))
