@@ -81,7 +81,7 @@ if should_exit:
     sys.exit(1)
 
 # Get the list of files that `includes_file` already has
-lines_to_parse = []
+includes_to_check = []
 with open(includes_file, 'r') as file:
     encountered_include_area = False
     inside_include_area = False
@@ -121,7 +121,7 @@ with open(includes_file, 'r') as file:
     if ignored_line_count != 0:
         post_notice(f"{ignored_line_count} lines were ignored while processing the includes file.")
 
-if len(lines_to_parse) == 0:
+if len(includes_to_check) == 0:
     post_notice(f"No includes found within the includes file. Exiting.")
     sys.exit()
 
