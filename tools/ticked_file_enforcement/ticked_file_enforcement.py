@@ -65,14 +65,16 @@ def post_warn(string):
         print(f"::warning file={includes_file},title=Ticked File Enforcement::{string}")
 
 
-
-for excluded_file in excluded_files:
-    full_file_path = scannable_directory + excluded_file
+### BEGIN PROCESSING ###
+# Check for excluded files that don't exist.
+should_exit = False
+for unincluded_file_path in unincluded_files:
+    full_file_path = base_scanning_directory + unincluded_file_path
     if not os.path.isfile(full_file_path):
-        post_error(f"Excluded file {full_file_path} does not exist, please remove it!")
-        sys.exit(1)
-
-file_extensions = ("dm", "dmf")
+        post_error(f"`{full_file_path}` is excluded, but does not exist. It should be removed.")
+        should_exit = True
+if should_exit:
+    sys.exit(1)
 
 reading = False
 lines = []
@@ -95,6 +97,7 @@ with open(file_reference, 'r') as file:
 
 offset = total - len(lines)
 print(blue(f"Ticked File Enforcement: {offset} lines were ignored in output for [{file_reference}]."))
+file_extensions = ("dm", "dmf")
 fail_no_include = False
 
 scannable_files = []

@@ -1,0 +1,9 @@
+{
+	"includes_file": "tools/ticked_file_enforcement/tests/errors/nonexistent_exclude.dme",
+	"base_scanning_directory": "tools/ticked_file_enforcement/tests/",
+	"check_subdirectories": false,
+	"unincluded_files": [
+		"this_file_should_not_exist"
+	],
+	"forbidden_includes": []
+}
