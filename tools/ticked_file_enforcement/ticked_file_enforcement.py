@@ -66,6 +66,10 @@ def post_warn(string):
 
 
 ### BEGIN PROCESSING ###
+if on_github:
+    print(f"::group::Ticked File Enforcement [{includes_file}]")
+print(f"Processing `{includes_file}`...")
+
 # Check for excluded files that don't exist.
 should_exit = False
 for unincluded_file_path in unincluded_files:
@@ -121,6 +125,8 @@ if len(lines_to_parse) == 0:
     post_notice(f"No includes found within the includes file. Exiting.")
     sys.exit()
 
+if on_github:
+    print(f"::endgroup::")
 
 file_extensions = ("dm", "dmf")
 fail_no_include = False
