@@ -1,0 +1,9 @@
+{
+	"includes_file": "tools/ticked_file_enforcement/tests/unincluded_globs_should_not_match_included_file.dme",
+	"base_scanning_directory": "tools/ticked_file_enforcement/tests/",
+	"check_subdirectories": false,
+	"unincluded_file_globs": [
+		"empty_file.dm"
+	],
+	"forbidden_include_globs": []
+}

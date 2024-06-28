@@ -64,6 +64,12 @@ def post_warn(string):
     if on_github:
         print(f"::warning file={includes_file},title=Ticked File Enforcement::{string}")
 
+def find_in_includes(file_path):
+    if file_path in includes_found:
+        return True
+    else:
+        return False
+
 
 ### BEGIN PROCESSING ###
 if on_github:
@@ -130,6 +136,12 @@ for unincluded_file_glob in unincluded_file_globs:
         post_warn(f"`{full_file_glob}` is excluded, but does not match any files.")
         continue
     unincluded_file_list.extend(file_list)
+
+# Find any files marked as intentionally unincluded, that are included anyways.
+unincluded_yet_included = filter(find_in_includes, unincluded_file_list)
+for file_path in unincluded_yet_included:
+    post_warn(f"`{file_path}` is marked as intentionally unincluded, yet was found in the includes file anyways.")
+
 if on_github:
     print(f"::endgroup::")
 
