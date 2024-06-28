@@ -71,17 +71,17 @@ if on_github:
 print(f"Processing `{includes_file}`...")
 
 # Create our list of excluded files.
-files_not_included = []
+unincluded_file_list = []
 for unincluded_file_glob in unincluded_files:
     full_file_glob = base_scanning_directory + unincluded_file_glob
     file_list = glob.glob(full_file_glob, recursive=True)
     if len(file_list) == 0:
         post_warn(f"`{full_file_glob}` is excluded, but does not match any files.")
         continue
-    files_not_included.extend(file_list)
+    unincluded_file_list.extend(file_list)
 
 # Get the list of files that `includes_file` already has
-includes_to_check = []
+includes_found = []
 with open(includes_file, 'r') as file:
     encountered_include_area = False
     inside_include_area = False
@@ -103,7 +103,7 @@ with open(includes_file, 'r') as file:
             continue
 
         if inside_include_area and line.startswith("#include "):
-            lines_to_parse.append(line)
+            includes_found.append(line)
             continue
 
         # If we're here, none of the above branches were taken, so we consider this line to be
@@ -121,7 +121,7 @@ with open(includes_file, 'r') as file:
     if ignored_line_count != 0:
         post_notice(f"{ignored_line_count} lines were ignored while processing the includes file.")
 
-if len(includes_to_check) == 0:
+if len(includes_found) == 0:
     post_notice(f"No includes found within the includes file. Exiting.")
     sys.exit()
 
