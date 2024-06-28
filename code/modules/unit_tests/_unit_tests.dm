@@ -138,7 +138,6 @@
 #include "leash.dm"
 #include "lesserform.dm"
 #include "limbsanity.dm"
-#include "linked_xenobio_pens.dm"
 #include "load_map_security.dm"
 #include "lungs.dm"
 #include "machine_disassembly.dm"
@@ -230,6 +229,10 @@
 #ifdef REFERENCE_TRACKING_DEBUG //Don't try and parse this file if ref tracking isn't turned on. IE: don't parse ref tracking please mr linter
 #include "find_reference_sanity.dm"
 #endif
+
+// MONKESTATION ADDITION START - Put Monkestation-specific unit tests in its own folder
+#include "~monkestation/_unit_tests.dm"
+// MONKESTATION ADDITION END
 
 #undef TEST_ASSERT
 #undef TEST_ASSERT_EQUAL
