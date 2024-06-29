@@ -38,7 +38,7 @@ check_subdirectories = schema["check_subdirectories"]
 # (Array of strings: File pathname patterns) File paths within `base_scanning_directory` that are
 # intentionally not included in `includes_file`. It is NOT an error for a file matching one of these
 # patterns to be included in `includes_file`, but we will warn regardless.
-unincluded_file_globs = schema["unincluded_file_globs"]
+exempt_include_globs = schema["exempt_include_globs"]
 
 # (Array of strings: File pathname patterns) File paths that are not allowed to be included in
 # `includes_file`. It is an error for a file matching one of these patterns to be included in
@@ -83,20 +83,20 @@ if not base_scanning_directory.startswith(includes_file_directory):
     sys.exit(1)
 
 # Process the unincluded file globs to create the actual file globs we want.
-compiled_unincluded_file_globs = []
-for unincluded_file_glob in unincluded_file_globs:
-    full_file_glob = base_scanning_directory + unincluded_file_glob
+compiled_exempt_include_globs = []
+for exempt_include_glob in exempt_include_globs:
+    full_file_glob = base_scanning_directory + exempt_include_glob
     file_list = glob.glob(full_file_glob, recursive=True)
     if len(file_list) == 0:
         post_warn(f"The unincluded file glob `{full_file_glob}` does not match any files.")
         # Since we know this doesn't match any files, let's skip adding this to the list of
         # processed globs.
         continue
-    compiled_unincluded_file_globs.append(full_file_glob)
+    compiled_exempt_include_globs.append(full_file_glob)
 
-def matches_unincluded_file_glob(file_path):
-    for compiled_unincluded_file_glob in compiled_unincluded_file_globs:
-        if fnmatch.fnmatch(file_path, compiled_unincluded_file_glob):
+def matches_exempt_include_glob(file_path):
+    for compiled_exempt_include_glob in compiled_exempt_include_globs:
+        if fnmatch.fnmatch(file_path, compiled_exempt_include_glob):
             return True
     return False
 
@@ -161,7 +161,7 @@ with open(includes_file, 'r') as file:
             # At this point, we should have the file path. So finally, prepend the DME's directory.
             file_path = includes_file_directory + file_path
             # If the file path matches one of the unincluded file globs, spit out a warning.
-            if matches_unincluded_file_glob(file_path):
+            if matches_exempt_include_glob(file_path):
                 post_warn(f"The file path `{file_path}` matched a unincluded file glob, but was found in the includes file.")
             includes_found.append(file_path)
             continue

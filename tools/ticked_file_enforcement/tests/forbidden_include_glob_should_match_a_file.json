@@ -2,7 +2,7 @@
 	"includes_file": "tools/ticked_file_enforcement/tests/forbidden_include_glob_should_match_a_file.dme",
 	"base_scanning_directory": "tools/ticked_file_enforcement/tests/",
 	"check_subdirectories": false,
-	"unincluded_file_globs": [],
+	"exempt_include_globs": [],
 	"forbidden_include_globs": [
 		"this*glob*does*not*exist"
 	]
