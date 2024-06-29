@@ -82,6 +82,22 @@ if not base_scanning_directory.startswith(includes_file_directory):
     post_error(f"The base scanning directory is not in the same directory or a subdirectory as the includes file.")
     sys.exit(1)
 
+# Process the unincluded file globs to create the actual file globs we want.
+unincluded_file_globs_processed = []
+for unincluded_file_glob in unincluded_file_globs:
+    full_file_glob = base_scanning_directory + unincluded_file_glob
+    file_list = glob.glob(full_file_glob, recursive=True)
+    if len(file_list) == 0:
+        post_warn(f"The unincluded file glob `{full_file_glob}` does not match any files.")
+        continue
+    unincluded_file_globs_processed.append(full_file_glob)
+
+def matches_unincluded_file_glob(file_path):
+    for unincluded_file_glob in unincluded_file_globs_processed:
+        if fnmatch.fnmatch(file_path, unincluded_file_glob):
+            return True
+    return False
+
 # Get the list of files that are included in `includes_file`
 includes_found = []
 with open(includes_file, 'r') as file:
@@ -120,6 +136,9 @@ with open(includes_file, 'r') as file:
             file_path = file_path[1:-1]
             # Finally, prepend the DME's directory.
             file_path = includes_file_directory + file_path
+            # If the file path matches one of the unincluded file globs, spit out a warning.
+            if matches_unincluded_file_glob(file_path):
+                post_warn(f"The file path `{file_path}` matched a unincluded file glob, but was found in the includes file.")
             includes_found.append(file_path)
             continue
 
@@ -144,21 +163,6 @@ if len(includes_found) == 0:
     post_notice(f"No includes found within the includes file. Exiting.")
     sys.exit()
 
-# Create our list of excluded files.
-unincluded_file_list = []
-for unincluded_file_glob in unincluded_file_globs:
-    full_file_glob = base_scanning_directory + unincluded_file_glob
-    file_list = glob.glob(full_file_glob, recursive=True)
-    if len(file_list) == 0:
-        post_warn(f"The unincluded file glob `{full_file_glob}` does not match any files.")
-        continue
-    unincluded_file_list.extend(file_list)
-
-# Find any files marked as intentionally unincluded, that are included anyways.
-# This is not erroneous input, but we warn against it anyways.
-unincluded_yet_included = filter(find_in_includes, unincluded_file_list)
-for file_path in unincluded_yet_included:
-    post_warn(f"The file path `{file_path}` matched a unincluded file glob, but was found in the includes file.")
 
 if on_github:
     print(f"::endgroup::")
