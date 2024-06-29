@@ -100,6 +100,24 @@ def matches_unincluded_file_glob(file_path):
             return True
     return False
 
+# Process the forbidden include globs, to create the actual file globs we want.
+compiled_forbidden_include_globs = []
+for forbidden_include_glob in forbidden_include_globs:
+    full_file_glob = base_scanning_directory + forbidden_include_glob
+    file_list = glob.glob(full_file_glob, recursive=True)
+    if len(file_list) == 0:
+        post_warn(f"The forbidden include glob `{full_file_glob}` does not match any files.")
+        # Since we know this doesn't match any files, let's skip adding this to the list of
+        # processed globs.
+        continue
+    compiled_forbidden_include_globs.append(full_file_glob)
+
+def matches_forbidden_include_glob(file_path):
+    for compiled_forbidden_include_glob in compiled_forbidden_include_globs:
+        if fnmatch.fnmatch(file_path, compiled_forbidden_include_glob):
+            return True
+    return False
+
 # Get the list of files that are included in `includes_file`
 includes_found = []
 with open(includes_file, 'r') as file:
