@@ -83,18 +83,20 @@ if not base_scanning_directory.startswith(includes_file_directory):
     sys.exit(1)
 
 # Process the unincluded file globs to create the actual file globs we want.
-unincluded_file_globs_processed = []
+compiled_unincluded_file_globs = []
 for unincluded_file_glob in unincluded_file_globs:
     full_file_glob = base_scanning_directory + unincluded_file_glob
     file_list = glob.glob(full_file_glob, recursive=True)
     if len(file_list) == 0:
         post_warn(f"The unincluded file glob `{full_file_glob}` does not match any files.")
+        # Since we know this doesn't match any files, let's skip adding this to the list of
+        # processed globs.
         continue
-    unincluded_file_globs_processed.append(full_file_glob)
+    compiled_unincluded_file_globs.append(full_file_glob)
 
 def matches_unincluded_file_glob(file_path):
-    for unincluded_file_glob in unincluded_file_globs_processed:
-        if fnmatch.fnmatch(file_path, unincluded_file_glob):
+    for compiled_unincluded_file_glob in compiled_unincluded_file_globs:
+        if fnmatch.fnmatch(file_path, compiled_unincluded_file_glob):
             return True
     return False
 
