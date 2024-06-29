@@ -127,16 +127,20 @@ with open(includes_file, 'r') as file:
             inside_include_area = False
             continue
 
+        # If the line is within the include area, and appears to be an include statement, process it
+        # into the file path.
+        #
+        # NOTE: The below code doesn't match properly if there's stuff before `#include`, or if
+        # there's comment syntax in the middle of the include statement, because those aren't very
+        # common. Still, if you need that functionality, the above code is what you'll want to edit.
         if inside_include_area and line.startswith("#include \""):
-            # Let's get the file path. First, only take up everything to the first `//` (if it exists)
+            # First, only take up everything to the first `//` (if it exists).
             file_path = line.partition("//")[0]
             # Next, remove the include prefix.
             file_path = file_path.removeprefix("#include")
-            # Strip any whitepsace from both sides.
-            file_path = file_path.strip()
-            # Our file path is everything between the beginning and end quotes.
-            file_path = file_path[1:-1]
-            # Finally, prepend the DME's directory.
+            # Strip the whitespace and `"` from both sides, which should leave us with the file path.
+            file_path = file_path.strip(' "')
+            # At this point, we should have the file path. So finally, prepend the DME's directory.
             file_path = includes_file_directory + file_path
             # If the file path matches one of the unincluded file globs, spit out a warning.
             if matches_unincluded_file_glob(file_path):
