@@ -173,10 +173,41 @@ jobs:
         run: |
           echo "max_required_byond_client=$(grep -Ev '^[[:blank:]]{0,}#{1,}|^[[:blank:]]{0,}$' .github/max_required_byond_client.txt | tail -n1)" >> $GITHUB_OUTPUT
 
+  compile_for_integration_tests:
+    if: ( !contains(github.event.head_commit.message, '[ci skip]') )
+    name: Compile Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore BYOND cache
+        uses: actions/cache@v4
+        with:
+          path: ~/BYOND
+          key: ${{ runner.os }}-byond-${{ hashFiles('dependencies.sh') }}
+      - name: Compile Tests
+        id: compile_tests
+        run: |
+          bash tools/ci/install_byond.sh
+          source $HOME/BYOND/byond/bin/byondsetup
+          tools/build/build --ci dm -DCIBUILDING -DANSICOLORS -Werror
+      - name: Upload Compilation Artifacts
+        if: always() && steps.compile_tests.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration_test_compilation_artifacts
+          path: |
+            tgstation.dmb
+            tgstation.rsc
+          if-no-files-found: error
+          retention-days: 1
+          overwrite: true
+
   run_all_tests:
     if: ( !contains(github.event.head_commit.message, '[ci skip]') )
     name: Integration Tests
-    needs: [collect_data]
+    needs: [collect_data, compile_for_integration_tests]
 
     strategy:
       fail-fast: false
@@ -191,7 +222,7 @@ jobs:
   run_alternate_tests:
     if: ( !contains(github.event.head_commit.message, '[ci skip]') && needs.collect_data.outputs.alternate_tests != '[]' )
     name: Alternate Tests
-    needs: [collect_data]
+    needs: [collect_data, compile_for_integration_tests]
     strategy:
       fail-fast: false
       matrix:
