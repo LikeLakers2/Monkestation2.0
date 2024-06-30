@@ -100,25 +100,24 @@ if not base_scanning_directory.is_relative_to(includes_file.parent):
     post_error(f"The schema-defined `base_scanning_directory` [{base_scanning_directory}] must be the directory in which the includes file resides, or a subdirectory.")
     perform_exit()
 
-sys.exit()
+# Process the exempt include globs, to create a list of files that are intentionally unincluded.
+def process_exempt_include_globs():
+    files_matched = set()
+    files_matched_multiple_times = set()
+    for exempt_include_glob in exempt_include_globs:
+        file_list = base_scanning_directory.glob(exempt_include_glob)
+        for file in file_list:
+            if file in files_matched:
+                files_matched_multiple_times.add(file)
+                continue
+            files_matched.add(file)
 
-# Process the unincluded file globs to create the actual file globs we want.
-compiled_exempt_include_globs = []
-for exempt_include_glob in exempt_include_globs:
-    full_file_glob = base_scanning_directory + exempt_include_glob
-    file_list = glob.glob(full_file_glob, recursive=True)
-    if len(file_list) == 0:
-        post_warn(f"The unincluded file glob `{full_file_glob}` does not match any files.")
-        # Since we know this doesn't match any files, let's skip adding this to the list of
-        # processed globs.
-        continue
-    compiled_exempt_include_globs.append(full_file_glob)
+    for file in files_matched_multiple_times:
+        post_warn(f"A file path matched by the exempt include globs, `{file}`, was matched multiple times.")
 
-def matches_exempt_include_glob(file_path):
-    for compiled_exempt_include_glob in compiled_exempt_include_globs:
-        if fnmatch.fnmatch(file_path, compiled_exempt_include_glob):
-            return True
-    return False
+    return files_matched
+
+files_exempt_from_include = process_exempt_include_globs()
 
 # Process the forbidden include globs, to create the actual file globs we want.
 compiled_forbidden_include_globs = []

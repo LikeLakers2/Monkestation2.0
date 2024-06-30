@@ -1,0 +1,10 @@
+{
+	"includes_file": "tools/ticked_file_enforcement/tests/schema/exempt_include_glob_should_match_a_file.dme",
+	"base_scanning_directory": "tools/ticked_file_enforcement/tests/schema/",
+	"check_subdirectories": false,
+	"exempt_include_globs": [
+		"empty_file.dm",
+		"empty_file.dm"
+	],
+	"forbidden_include_globs": []
+}

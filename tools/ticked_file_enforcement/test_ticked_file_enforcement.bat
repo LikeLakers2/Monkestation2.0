@@ -14,6 +14,8 @@ type tools\ticked_file_enforcement\tests\schema\exempt_include_glob_should_match
 echo.
 type tools\ticked_file_enforcement\tests\schema\exempt_include_globs_should_not_match_included_file.json | tools\bootstrap\python tools\ticked_file_enforcement\ticked_file_enforcement.py
 echo.
+type tools\ticked_file_enforcement\tests\schema\exempt_include_globs_should_not_match_files_multiple_times.json | tools\bootstrap\python tools\ticked_file_enforcement\ticked_file_enforcement.py
+echo.
 
 echo.
 echo ---- ERROR TESTS ----
