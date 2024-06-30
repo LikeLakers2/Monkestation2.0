@@ -155,7 +155,7 @@ for file in files_forbidden_and_exempt:
     files_exempt_from_include.remove(file)
 
 # Get the list of files that are included in `includes_file`
-includes_found = set()
+includes_found = []
 with open(includes_file, 'r') as file:
     # Marks if we've ever seen a BEGIN_INCLUDE
     encountered_include_area = False
@@ -198,7 +198,7 @@ with open(includes_file, 'r') as file:
             file_path = includes_file.parent.joinpath(file_path)
             if file_path in includes_found:
                 post_error(f"The file `{file_path}` is included multiple times.")
-            includes_found.add(file_path)
+            includes_found.append(file_path)
             continue
 
         # If we're here, none of the above branches were taken, so we consider this line to be
