@@ -155,6 +155,27 @@ for file in files_forbidden_and_exempt:
 # later.
 files_exempt_from_include -= files_forbidden_and_exempt
 
+# Get the list of .dm and .dmf files that are within `base_scanning_directory`.
+def get_base_scanning_directory_file_list():
+    CHECKED_FILE_EXTENSIONS = (".dm", ".dmf")
+    results = set()
+    directories_to_check = set([base_scanning_directory])
+
+    while len(directories_to_check) > 0:
+        directory_to_check = directories_to_check.pop()
+        for entry in directory_to_check.iterdir():
+            if entry.is_file() and (entry.suffix in CHECKED_FILE_EXTENSIONS):
+                results.add(entry)
+            elif entry.is_dir() and check_subdirectories:
+                directories_to_check.add(entry)
+            # We don't do anything with symlinks
+
+    return results
+
+files_within_scanned_directory = get_base_scanning_directory_file_list()
+files_within_scanned_directory -= files_exempt_from_include
+files_within_scanned_directory -= files_forbidden_from_include
+
 # Get the list of files that are included in `includes_file`
 includes_found = []
 with open(includes_file, 'r') as file:
@@ -218,27 +239,6 @@ with open(includes_file, 'r') as file:
 
     if ignored_line_count != 0:
         post_notice(f"{ignored_line_count} lines were ignored while processing the includes file.")
-
-# Get the list of .dm and .dmf files that are within `base_scanning_directory`.
-def get_base_scanning_directory_file_list():
-    CHECKED_FILE_EXTENSIONS = (".dm", ".dmf")
-    results = set()
-    directories_to_check = set([base_scanning_directory])
-
-    while len(directories_to_check) > 0:
-        directory_to_check = directories_to_check.pop()
-        for entry in directory_to_check.iterdir():
-            if entry.is_file() and (entry.suffix in CHECKED_FILE_EXTENSIONS):
-                results.add(entry)
-            elif entry.is_dir() and check_subdirectories:
-                directories_to_check.add(entry)
-            # We don't do anything with symlinks
-
-    return results
-
-files_within_scanned_directory = get_base_scanning_directory_file_list()
-files_within_scanned_directory -= files_exempt_from_include
-files_within_scanned_directory -= files_forbidden_from_include
 
 if on_github:
     print(f"::endgroup::")
