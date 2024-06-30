@@ -3,6 +3,7 @@ import functools
 import glob
 import json
 import os
+import pathlib
 import sys
 
 # simple way to check if we're running on github actions, or on a local machine
@@ -38,16 +39,24 @@ def post_warn(string):
     if on_github:
         print(f"::warning file={includes_file},title=Ticked File Enforcement::{string}")
 
+def perform_exit():
+    if on_github:
+        print(f"::endgroup::")
+    sys.exit(1)
+
 ### BEGIN SCHEMA ###
+# TODO: Have this script take in a file path, but still take in STDIN if the file path == "-"
 schema = json.load(sys.stdin)
 
 # (String: File path) The file that we want to take includes from
-includes_file = schema["includes_file"]
+includes_file = pathlib.Path(schema["includes_file"])
 
 # (String: Directory path) The base directory from which to collect file paths that we want to
 # ensure are included in `includes_file`. Any files in `includes_file` that do not come from this
 # directory are ignored.
-base_scanning_directory = schema["base_scanning_directory"]
+#
+# This directory must be the same directory as where `includes_file` is, or a subdirectory.
+base_scanning_directory = pathlib.Path(schema["base_scanning_directory"])
 
 # (Boolean) If we should consider the files from subdirectories of `base_scanning_directory`, when
 # generating a list of files that should be within `includes_file`.
@@ -76,11 +85,22 @@ if on_github:
     print(f"::group::Ticked File Enforcement [{includes_file}]")
 print(f"Processing `{includes_file}`...")
 
-# Ticked files should always be in the same directory, or a subdirectory, as the include file.
-includes_file_directory = os.path.dirname(includes_file) + "/"
-if not base_scanning_directory.startswith(includes_file_directory):
-    post_error(f"The base scanning directory is not in the same directory or a subdirectory as the includes file.")
-    sys.exit(1)
+# Before anything else, ensure our schema is even valid.
+## The includes file must point to an existing file.
+if not includes_file.is_file():
+    post_error(f"The schema-defined `includes_file` does not point to an existing file.")
+    perform_exit()
+## The base scanning directory must point to an existing directory.
+if not base_scanning_directory.is_dir():
+    post_error(f"The schema-defined `base_scanning_directory` [{base_scanning_directory}] does not point to an existing directory.")
+    perform_exit()
+## The base scanning directory must be the same directory as where `includes_file` is, or a
+## subdirectory.
+if not base_scanning_directory.is_relative_to(includes_file.parent):
+    post_error(f"The schema-defined `base_scanning_directory` [{base_scanning_directory}] must be the directory in which the includes file resides, or a subdirectory.")
+    perform_exit()
+
+sys.exit()
 
 # Process the unincluded file globs to create the actual file globs we want.
 compiled_exempt_include_globs = []

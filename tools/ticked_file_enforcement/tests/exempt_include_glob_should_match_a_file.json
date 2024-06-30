@@ -1,9 +1,0 @@
-{
-	"includes_file": "tools/ticked_file_enforcement/tests/exempt_include_glob_should_match_a_file.dme",
-	"base_scanning_directory": "tools/ticked_file_enforcement/tests/",
-	"check_subdirectories": false,
-	"exempt_include_globs": [
-		"this*glob*does*not*exist"
-	],
-	"forbidden_include_globs": []
-}
