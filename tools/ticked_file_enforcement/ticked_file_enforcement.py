@@ -117,29 +117,35 @@ def process_exempt_include_globs():
             post_warn(f"The exempt include glob `{exempt_include_glob}` does not match any files.")
 
     for file in files_matched_multiple_times:
-        post_warn(f"A file path matched by the exempt include globs, `{file}`, was matched multiple times.")
+        post_warn(f"The file `{file}` was matched by multiple exempt include globs.")
 
     return files_matched
 
 files_exempt_from_include = process_exempt_include_globs()
 
-# Process the forbidden include globs, to create the actual file globs we want.
-compiled_forbidden_include_globs = []
-for forbidden_include_glob in forbidden_include_globs:
-    full_file_glob = base_scanning_directory + forbidden_include_glob
-    file_list = glob.glob(full_file_glob, recursive=True)
-    if len(file_list) == 0:
-        post_warn(f"The forbidden include glob `{full_file_glob}` does not match any files.")
-        # Since we know this doesn't match any files, let's skip adding this to the list of
-        # processed globs.
-        continue
-    compiled_forbidden_include_globs.append(full_file_glob)
+# Process the forbidden include globs, to create a list of files that are intentionally unincluded
+# AND should never be included.
+def process_forbidden_include_globs():
+    files_matched = set()
+    files_matched_multiple_times = set()
+    for forbidden_include_glob in forbidden_include_globs:
+        matched_any_files = False
+        file_list = base_scanning_directory.glob(forbidden_include_glob)
+        for file in file_list:
+            matched_any_files = True
+            if file in files_matched:
+                files_matched_multiple_times.add(file)
+                continue
+            files_matched.add(file)
+        if not matched_any_files:
+            post_warn(f"The forbidden include glob `{forbidden_include_glob}` does not match any files.")
 
-def matches_forbidden_include_glob(file_path):
-    for compiled_forbidden_include_glob in compiled_forbidden_include_globs:
-        if fnmatch.fnmatch(file_path, compiled_forbidden_include_glob):
-            return True
-    return False
+    for file in files_matched_multiple_times:
+        post_warn(f"The file `{file}` was matched by multiple forbidden include globs.")
+
+    return files_matched
+
+files_forbidden_from_include = process_forbidden_include_globs()
 
 # Get the list of files that are included in `includes_file`
 includes_found = []
