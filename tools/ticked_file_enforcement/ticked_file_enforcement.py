@@ -220,6 +220,7 @@ with open(includes_file, 'r') as file:
             file_path = includes_file.parent.joinpath(file_path)
             if file_path in includes_found:
                 post_error(f"The file `{file_path}` is included multiple times.")
+                continue
             includes_found.append(file_path)
             continue
 
