@@ -20,6 +20,24 @@ def blue(text):
 def yellow(text):
     return "\033[33m" + str(text) + "\033[0m"
 
+def post_ok(string):
+    print(green(f"[{includes_file}]: " + string))
+
+def post_error(string):
+    print(red(f"[{includes_file}]: " + string))
+    if on_github:
+        print(f"::error file={includes_file},title=Ticked File Enforcement::{string}")
+
+def post_notice(string):
+    print(blue(f"[{includes_file}]: " + string))
+    if on_github:
+        print(f"::notice file={includes_file},title=Ticked File Enforcement::{string}")
+
+def post_warn(string):
+    print(yellow(f"[{includes_file}]: " + string))
+    if on_github:
+        print(f"::warning file={includes_file},title=Ticked File Enforcement::{string}")
+
 ### BEGIN SCHEMA ###
 schema = json.load(sys.stdin)
 
@@ -45,24 +63,6 @@ exempt_include_globs = schema["exempt_include_globs"]
 # `includes_file`.
 forbidden_include_globs = schema["forbidden_include_globs"]
 ### END SCHEMA ###
-
-def post_ok(string):
-    print(green(f"[{includes_file}]: " + string))
-
-def post_error(string):
-    print(red(f"[{includes_file}]: " + string))
-    if on_github:
-        print(f"::error file={includes_file},title=Ticked File Enforcement::{string}")
-
-def post_notice(string):
-    print(blue(f"[{includes_file}]: " + string))
-    if on_github:
-        print(f"::notice file={includes_file},title=Ticked File Enforcement::{string}")
-
-def post_warn(string):
-    print(yellow(f"[{includes_file}]: " + string))
-    if on_github:
-        print(f"::warning file={includes_file},title=Ticked File Enforcement::{string}")
 
 def find_in_includes(file_path):
     if file_path in includes_found:
