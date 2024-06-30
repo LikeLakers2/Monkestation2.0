@@ -196,6 +196,8 @@ with open(includes_file, 'r') as file:
             file_path = file_path.strip(' "')
             # At this point, we should have the file path. So finally, prepend the DME's directory.
             file_path = includes_file.parent.joinpath(file_path)
+            if file_path in includes_found:
+                post_error(f"The file `{file_path}` is included multiple times.")
             includes_found.add(file_path)
             continue
 

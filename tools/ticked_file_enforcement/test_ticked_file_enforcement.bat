@@ -25,6 +25,8 @@ type tools\ticked_file_enforcement\tests\includes_file_must_have_begin_include.j
 echo.
 type tools\ticked_file_enforcement\tests\includes_file_must_have_end_include.json | tools\bootstrap\python tools\ticked_file_enforcement\ticked_file_enforcement.py
 echo.
+type tools\ticked_file_enforcement\tests\includes_file_must_not_include_a_file_multiple_times.json | tools\bootstrap\python tools\ticked_file_enforcement\ticked_file_enforcement.py
+echo.
 type tools\ticked_file_enforcement\tests\schema\base_scanning_directory_must_be_within_includes_file_directory.json | tools\bootstrap\python tools\ticked_file_enforcement\ticked_file_enforcement.py
 echo.
 type tools\ticked_file_enforcement\tests\schema\base_scanning_directory_must_point_to_existing_directory.json | tools\bootstrap\python tools\ticked_file_enforcement\ticked_file_enforcement.py
