@@ -231,12 +231,12 @@ with open(includes_file, 'r') as file:
     # If we never entered the include area, then we never encountered a BEGIN_INCLUDE marker.
     if not encountered_include_area:
         post_error(f"Missing BEGIN_INCLUDE marker.")
-        sys.exit(1)
+        perform_exit()
 
     # If we are still inside the include area, then we never encountered a END_INCLUDE marker.
     if inside_include_area:
         post_error(f"Missing END_INCLUDE marker.")
-        sys.exit(1)
+        perform_exit()
 
     if ignored_line_count != 0:
         post_notice(f"{ignored_line_count} lines were ignored while processing the includes file.")
