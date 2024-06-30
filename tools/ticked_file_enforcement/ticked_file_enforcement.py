@@ -187,17 +187,26 @@ if len(includes_found) == 0:
     post_notice(f"No includes found within the includes file. Exiting.")
     sys.exit()
 
+# Get the list of .dm and .dmf files that are within `base_scanning_directory`, that are not marked
+# as explicitly unincluded.
+CHECKED_FILE_EXTENSIONS = ("dm", "dmf")
+files_within_scanned_directory = []
+for file_extension in CHECKED_FILE_EXTENSIONS:
+    compiled_path_glob = os.path.join(
+        base_scanning_directory,
+        "**" if check_subdirectories else "",
+        f"*.{file_extension}",
+    )
+    file_iter = glob.iglob(compiled_path_glob, recursive=check_subdirectories)
+    for file_path in file_iter:
+        if matches_exempt_include_glob(file_path):
+            continue
+        files_within_scanned_directory.append(file_path)
 
 if on_github:
     print(f"::endgroup::")
 
-file_extensions = ("dm", "dmf")
 fail_no_include = False
-
-scannable_files = []
-for file_extension in file_extensions:
-    compiled_directory = f"{scannable_directory}/**/*.{file_extension}"
-    scannable_files += glob.glob(compiled_directory, recursive=True)
 
 if len(scannable_files) == 0:
     post_error(f"No files were found in {scannable_directory}. Ticked File Enforcement has failed!")
