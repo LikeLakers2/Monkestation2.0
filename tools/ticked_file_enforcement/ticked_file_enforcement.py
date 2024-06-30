@@ -151,8 +151,9 @@ files_forbidden_from_include = process_forbidden_include_globs()
 files_forbidden_and_exempt = files_exempt_from_include & files_forbidden_from_include
 for file in files_forbidden_and_exempt:
     post_warn(f"The file `{file}` is both forbidden from inclusion and exempt from inclusion.")
-    # Remove it from the exempt list, to remove unnecessary warnings later.
-    files_exempt_from_include.remove(file)
+# Remove any files that are in both sets from the exempt list. This removes unnecessary warnings
+# later.
+files_exempt_from_include -= files_forbidden_and_exempt
 
 # Get the list of files that are included in `includes_file`
 includes_found = []
