@@ -3,9 +3,9 @@
 	"base_scanning_directory": "tools/ticked_file_enforcement/tests/schema/",
 	"check_subdirectories": false,
 	"exempt_include_globs": [
-		"empty_file.dm"
+		"forbidden_and_excluded.dm"
 	],
 	"forbidden_include_globs": [
-		"empty_file.dm"
+		"forbidden_and_excluded.dm"
 	]
 }

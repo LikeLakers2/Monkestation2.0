@@ -97,7 +97,7 @@ if not base_scanning_directory.is_dir():
 ## The base scanning directory must be the same directory as where `includes_file` is, or a
 ## subdirectory.
 if not base_scanning_directory.is_relative_to(includes_file.parent):
-    post_error(f"The schema-defined `base_scanning_directory` [{base_scanning_directory}] must be the directory in which the includes file resides, or a subdirectory.")
+    post_error(f"The schema-defined `base_scanning_directory` [{base_scanning_directory}] must be the directory in which the includes file resides, or a subdirectory of that directory.")
     perform_exit()
 
 # Process the exempt include globs, to create a list of files that are intentionally unincluded.
@@ -155,7 +155,7 @@ for file in files_forbidden_and_exempt:
     files_exempt_from_include.remove(file)
 
 # Get the list of files that are included in `includes_file`
-includes_found = []
+includes_found = set()
 with open(includes_file, 'r') as file:
     # Marks if we've ever seen a BEGIN_INCLUDE
     encountered_include_area = False
@@ -195,11 +195,8 @@ with open(includes_file, 'r') as file:
             # Strip the whitespace and `"` from both sides, which should leave us with the file path.
             file_path = file_path.strip(' "')
             # At this point, we should have the file path. So finally, prepend the DME's directory.
-            file_path = includes_file_directory + file_path
-            # If the file path matches one of the unincluded file globs, spit out a warning.
-            if matches_exempt_include_glob(file_path):
-                post_warn(f"The file path `{file_path}` matched a unincluded file glob, but was found in the includes file.")
-            includes_found.append(file_path)
+            file_path = includes_file.parent.joinpath(file_path)
+            includes_found.add(file_path)
             continue
 
         # If we're here, none of the above branches were taken, so we consider this line to be
