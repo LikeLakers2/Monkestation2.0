@@ -73,13 +73,6 @@ exempt_include_globs = schema["exempt_include_globs"]
 forbidden_include_globs = schema["forbidden_include_globs"]
 ### END SCHEMA ###
 
-def find_in_includes(file_path):
-    if file_path in includes_found:
-        return True
-    else:
-        return False
-
-
 ### BEGIN PROCESSING ###
 if on_github:
     print(f"::group::Ticked File Enforcement [{includes_file}]")
