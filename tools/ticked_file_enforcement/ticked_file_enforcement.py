@@ -105,12 +105,16 @@ def process_exempt_include_globs():
     files_matched = set()
     files_matched_multiple_times = set()
     for exempt_include_glob in exempt_include_globs:
+        matched_any_files = False
         file_list = base_scanning_directory.glob(exempt_include_glob)
         for file in file_list:
+            matched_any_files = True
             if file in files_matched:
                 files_matched_multiple_times.add(file)
                 continue
             files_matched.add(file)
+        if not matched_any_files:
+            post_warn(f"The exempt include glob `{exempt_include_glob}` does not match any files.")
 
     for file in files_matched_multiple_times:
         post_warn(f"A file path matched by the exempt include globs, `{file}`, was matched multiple times.")
