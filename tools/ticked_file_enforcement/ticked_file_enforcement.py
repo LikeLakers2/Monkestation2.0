@@ -88,16 +88,16 @@ print(f"Processing `{includes_file}`...")
 # Before anything else, ensure our schema is even valid.
 ## The includes file must point to an existing file.
 if not includes_file.is_file():
-    post_error(f"The schema-defined `includes_file` does not point to an existing file.")
+    post_error(f"The includes_file key does not point to an existing file.")
     perform_exit()
 ## The base scanning directory must point to an existing directory.
 if not base_scanning_directory.is_dir():
-    post_error(f"The schema-defined `base_scanning_directory` [{base_scanning_directory}] does not point to an existing directory.")
+    post_error(f"The base scanning directory key `{base_scanning_directory}` does not point to an existing directory.")
     perform_exit()
 ## The base scanning directory must be the same directory as where `includes_file` is, or a
 ## subdirectory.
 if not base_scanning_directory.is_relative_to(includes_file.parent):
-    post_error(f"The schema-defined `base_scanning_directory` [{base_scanning_directory}] must be the directory in which the includes file resides, or a subdirectory of that directory.")
+    post_error(f"The base scanning directory key `{base_scanning_directory}` must be the directory in which the includes file resides, or a subdirectory of that directory.")
     perform_exit()
 
 # Process the exempt include globs, to create a list of files that are intentionally unincluded.
