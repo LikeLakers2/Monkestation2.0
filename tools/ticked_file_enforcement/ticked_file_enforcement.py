@@ -183,10 +183,6 @@ with open(includes_file, 'r') as file:
     if ignored_line_count != 0:
         post_notice(f"{ignored_line_count} lines were ignored while processing the includes file.")
 
-if len(includes_found) == 0:
-    post_notice(f"No includes found within the includes file. Exiting.")
-    sys.exit()
-
 # Get the list of .dm and .dmf files that are within `base_scanning_directory`, that are not marked
 # as explicitly unincluded.
 CHECKED_FILE_EXTENSIONS = ("dm", "dmf")

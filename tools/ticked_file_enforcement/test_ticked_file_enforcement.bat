@@ -1,6 +1,6 @@
 @echo off
 echo ---- NOTICE TESTS ----
-type tools\ticked_file_enforcement\tests\includes_file_should_have_includes.json | tools\bootstrap\python tools\ticked_file_enforcement\ticked_file_enforcement.py
+echo No tests.
 
 echo.
 echo ---- WARNING TESTS ----
