@@ -274,6 +274,8 @@ for file_path in includes_found_set:
 
 # Is the includes file missing any includes? This is an error if it does.
 missing_includes = files_within_scanned_directory - includes_found_set
+# Make sure we don't check for the includes file itself.
+missing_includes.discard(includes_file)
 if len(missing_includes) != 0:
     tfe_has_failed = True
 for file_path in missing_includes:
