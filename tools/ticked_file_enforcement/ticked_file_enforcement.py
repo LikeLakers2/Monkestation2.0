@@ -219,7 +219,7 @@ with open(includes_file, 'r') as file:
 
         # If we're here, none of the above branches were taken, so we consider this line to be
         # ignored.
-        ignored_line_count += 1
+        pass
 
     # If we never entered the include area, then we never encountered a BEGIN_INCLUDE marker.
     if not encountered_include_area:
@@ -230,9 +230,6 @@ with open(includes_file, 'r') as file:
     if inside_include_area:
         post_error(f"Missing END_INCLUDE marker.")
         perform_exit()
-
-    if ignored_line_count != 0:
-        post_notice(f"{ignored_line_count} lines were ignored while processing the includes file.")
 
 if on_github:
     print(f"::endgroup::")
