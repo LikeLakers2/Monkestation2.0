@@ -262,6 +262,14 @@ for file_path in matching:
     post_error(f"The file path `{file_path}` is forbidden from inclusion.")
 del matching
 
+# Is the includes file missing any includes? This is an error if it does.
+missing = files_within_scanned_directory - includes_found_set
+if len(missing) != 0:
+    tfe_has_failed = True
+for file_path in missing:
+    post_error(f"The file path `{file_path}` is missing from the includes file.")
+del missing
+
 ### RESULTS PROCESSING END ###
 
 if on_github:
