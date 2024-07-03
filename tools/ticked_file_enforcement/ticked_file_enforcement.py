@@ -62,14 +62,15 @@ base_scanning_directory = pathlib.Path(schema["base_scanning_directory"])
 # generating a list of files that should be within `includes_file`.
 check_subdirectories = schema["check_subdirectories"]
 
-# (Array of strings: File pathname patterns) File paths within `base_scanning_directory` that are
-# intentionally not included in `includes_file`. It is NOT an error for a file matching one of these
-# patterns to be included in `includes_file`, but we will warn regardless.
+# (Array of strings: File pathname patterns) File path patterns, relative to
+# `base_scanning_directory` that are intentionally not included in `includes_file`. It is NOT an
+# error for a file matching one of these patterns to be included in `includes_file`, but we will
+# warn regardless.
 exempt_include_globs = schema["exempt_include_globs"]
 
-# (Array of strings: File pathname patterns) File paths that are not allowed to be included in
-# `includes_file`. It is an error for a file matching one of these patterns to be included in
-# `includes_file`.
+# (Array of strings: File pathname patterns) File path patterns, relative to
+# `base_scanning_directory`, that are not allowed to be included in `includes_file`. It is an error
+# for a file matching one of these patterns to be included in `includes_file`.
 forbidden_include_globs = schema["forbidden_include_globs"]
 ### END SCHEMA ###
 
