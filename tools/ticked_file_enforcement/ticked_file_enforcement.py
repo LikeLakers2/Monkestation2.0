@@ -216,6 +216,7 @@ with open(includes_file, 'r') as file:
             file_path = file_path.removeprefix("#include")
             # Strip the whitespace and `"` from both sides, which should leave us with the file path.
             file_path = file_path.strip(' "')
+            file_path = pathlib.PureWindowsPath(file_path)
             # At this point, we should have the file path. So finally, prepend the DME's directory.
             file_path = includes_file.parent.joinpath(file_path)
             if file_path in includes_found:
