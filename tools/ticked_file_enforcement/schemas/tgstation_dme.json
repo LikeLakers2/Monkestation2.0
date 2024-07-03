@@ -4,7 +4,7 @@
 	"check_subdirectories": true,
 	"exempt_include_globs": [],
 	"forbidden_include_globs": [
-		"code/modules/tgs/**/*.dm",
-		"code/modules/unit_tests/[!_]*.dm"
+		"modules/tgs/**/*.dm",
+		"modules/unit_tests/[!_]*.dm"
 	]
 }
