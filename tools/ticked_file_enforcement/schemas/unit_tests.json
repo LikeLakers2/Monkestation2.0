@@ -1,8 +1,8 @@
 {
-	"file": "code/modules/unit_tests/_unit_tests.dm",
-	"scannable_directory": "code/modules/unit_tests/",
-	"subdirectories": false,
-	"excluded_files": [
+	"includes_file": "code/modules/unit_tests/_unit_tests.dm",
+	"base_scanning_directory": "code/modules/unit_tests/",
+	"check_subdirectories": false,
+	"exempt_include_globs": [
 		"find_reference_sanity.dm",
 		"organs.dm",
 		"modify_fantasy_variable.dm",
@@ -18,5 +18,5 @@
 		"monkey_business.dm",
 		"rev_conversion.dm"
 	],
-	"forbidden_includes": []
+	"forbidden_include_globs": []
 }

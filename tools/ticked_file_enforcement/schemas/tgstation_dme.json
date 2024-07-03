@@ -1,9 +1,9 @@
 {
-	"file": "tgstation.dme",
-	"scannable_directory": "code/",
-	"subdirectories": true,
-	"excluded_files": [],
-	"forbidden_includes": [
+	"includes_file": "tgstation.dme",
+	"base_scanning_directory": "code/",
+	"check_subdirectories": true,
+	"exempt_include_globs": [],
+	"forbidden_include_globs": [
 		"code/modules/tgs/**/*.dm",
 		"code/modules/unit_tests/[!_]*.dm"
 	]
