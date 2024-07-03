@@ -8,7 +8,7 @@ type tools\ticked_file_enforcement\tests\begin_include_should_not_be_nested.json
 echo.
 type tools\ticked_file_enforcement\tests\end_include_should_not_be_outside_include_area.json | tools\bootstrap\python tools\ticked_file_enforcement\ticked_file_enforcement.py
 echo.
-type tools\ticked_file_enforcement\tests\exempt_include_globs_should_not_match_included_file.json | tools\bootstrap\python tools\ticked_file_enforcement\ticked_file_enforcement.py
+type tools\ticked_file_enforcement\tests\includes_file_should_not_have_exempt_includes.json | tools\bootstrap\python tools\ticked_file_enforcement\ticked_file_enforcement.py
 echo.
 type tools\ticked_file_enforcement\tests\schema\exempt_include_glob_should_match_a_file.json | tools\bootstrap\python tools\ticked_file_enforcement\ticked_file_enforcement.py
 echo.

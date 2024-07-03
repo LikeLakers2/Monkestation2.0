@@ -1,5 +1,5 @@
 {
-	"includes_file": "tools/ticked_file_enforcement/tests/exempt_include_globs_should_not_match_included_file.dme",
+	"includes_file": "tools/ticked_file_enforcement/tests/includes_file_should_not_have_exempt_includes.dme",
 	"base_scanning_directory": "tools/ticked_file_enforcement/tests/",
 	"check_subdirectories": false,
 	"exempt_include_globs": [
