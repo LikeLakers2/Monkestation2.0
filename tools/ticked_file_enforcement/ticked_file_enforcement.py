@@ -248,6 +248,7 @@ includes_found_set = set(includes_found)
 # Ticked File Enforcement has found errors.
 tfe_has_failed = False
 
+print(pathlib.Path.cwd())
 for file_path in includes_found_set:
     # Does the includes file have any includes that match the exempt include globs? This is not
     # necessarily an error, but we give out a warning for it all the same.
