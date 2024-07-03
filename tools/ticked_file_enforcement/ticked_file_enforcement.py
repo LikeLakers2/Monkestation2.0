@@ -247,35 +247,35 @@ includes_found_set = set(includes_found)
 # Ticked File Enforcement has found errors.
 tfe_has_failed = False
 
-# Does the includes file have any includes that match the exempt include globs? This is not
-# necessarily an error, but we give out a warning for it all the same.
-matching = includes_found_set & files_exempt_from_include
-for file_path in matching:
-    post_warn(f"The file path `{file_path}` matched a unincluded file glob, but was found in the includes file.")
-del matching
-
-# Does the includes file have any forbidden includes? This is an error if it does.
-matching = includes_found_set & files_forbidden_from_include
-if len(matching) != 0:
-    tfe_has_failed = True
-for file_path in matching:
-    post_error(f"The file path `{file_path}` is forbidden from inclusion.")
-del matching
-
-# Is the includes file missing any includes? This is an error if it does.
-missing_includes = files_within_scanned_directory - includes_found_set
-if len(missing_includes) != 0:
-    tfe_has_failed = True
-for file_path in missing_includes:
-    post_error(f"The file path `{file_path}` is missing from the includes file.")
-del missing_includes
-
-# Does the includes file have any includes pointing to files that don't exist? This is an error if
-# it does.
 for file_path in includes_found_set:
+    # Does the includes file have any includes that match the exempt include globs? This is not
+    # necessarily an error, but we give out a warning for it all the same.
+    for exempt_include_glob in exempt_include_globs:
+        if file_path.match(exempt_include_glob):
+            post_warn(f"The file path `{file_path}` matched the unincluded file glob `{exempt_include_glob}`, but was found in the includes file.")
+
+    # Does the includes file have any forbidden includes? This is an error if it does.
+    for forbidden_include_glob in forbidden_include_globs:
+        if file_path.match(forbidden_include_glob):
+            tfe_has_failed = True
+            post_error(f"The file path `{file_path}` is forbidden from inclusion, because it matched the forbidden include glob `{forbidden_include_glob}`.")
+
+    # Does the includes file have any includes pointing to files that don't exist? This is an error
+    # if it does.
     if not file_path.exists():
         tfe_has_failed = True
         post_error(f"The includes file includes `{file_path}`, which does not exist.")
+
+# Is the includes file missing any includes? This is an error if it does.
+for scanned_file_path in files_within_scanned_directory:
+    found_this = False
+    for file_path in includes_found_set:
+        if fnmatch.fnmatch(scanned_file_path, file_path):
+            found_this = True
+            break
+
+    if not found_this:
+        post_error(f"The file path `{file_path}` is missing from the includes file.")
 ### RESULTS PROCESSING END ###
 
 if on_github:
