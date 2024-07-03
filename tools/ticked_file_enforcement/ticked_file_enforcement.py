@@ -248,19 +248,22 @@ includes_found_set = set(includes_found)
 # Ticked File Enforcement has found errors.
 tfe_has_failed = False
 
+# Does the includes file have any includes that match the exempt include globs? This is not
+# necessarily an error, but we give out a warning for it all the same.
+for exempt_include_glob in exempt_include_globs:
+    exempt_but_included = fnmatch.filter(includes_found_set, exempt_include_glob)
+    for file_path in exempt_but_included:
+        post_warn(f"The file path `{file_path}` matched the unincluded file glob `{exempt_include_glob}`, but was found in the includes file.")
+
+# Does the includes file have any forbidden includes? This is an error if it does.
+for forbidden_include_glob in forbidden_include_globs:
+    forbidden_but_included = fnmatch.filter(includes_found_set, forbidden_include_glob)
+    for file_path in forbidden_but_included:
+        tfe_has_failed = True
+        post_error(f"The file path `{file_path}` is forbidden from inclusion, because it matched the forbidden include glob `{forbidden_include_glob}`.")
+
+
 for file_path in includes_found_set:
-    # Does the includes file have any includes that match the exempt include globs? This is not
-    # necessarily an error, but we give out a warning for it all the same.
-    for exempt_include_glob in exempt_include_globs:
-        if file_path.match(exempt_include_glob):
-            post_warn(f"The file path `{file_path}` matched the unincluded file glob `{exempt_include_glob}`, but was found in the includes file.")
-
-    # Does the includes file have any forbidden includes? This is an error if it does.
-    for forbidden_include_glob in forbidden_include_globs:
-        if file_path.match(forbidden_include_glob):
-            tfe_has_failed = True
-            post_error(f"The file path `{file_path}` is forbidden from inclusion, because it matched the forbidden include glob `{forbidden_include_glob}`.")
-
     # Does the includes file have any includes pointing to files that don't exist? This is an error
     # if it does.
     if not file_path.exists():
