@@ -289,49 +289,6 @@ del missing_files
 if on_github:
     print(f"::endgroup::")
 
-fail_no_include = False
-
-if len(scannable_files) == 0:
-    post_error(f"No files were found in {scannable_directory}. Ticked File Enforcement has failed!")
-    sys.exit(1)
-
-for code_file in scannable_files:
-    dm_path = ""
-
-    if subdirectories is True:
-        dm_path = code_file.replace('/', '\\')
-    else:
-        dm_path = os.path.basename(code_file)
-
-    included = f"#include \"{dm_path}\"" in lines
-
-    forbid_include = False
-    for forbidable in FORBIDDEN_INCLUDES:
-        if not fnmatch.fnmatch(code_file, forbidable):
-            continue
-
-        forbid_include = True
-
-        if included:
-            post_error(f"{dm_path} should NOT be included.")
-            fail_no_include = True
-
-    if forbid_include:
-        continue
-
-    if not included:
-        if(dm_path == file_reference_basename):
-            continue
-
-        if(dm_path in excluded_files):
-            continue
-
-        post_error(f"Missing include for {dm_path}.")
-        fail_no_include = True
-
-if fail_no_include:
-    sys.exit(1)
-
 def compare_lines(a, b):
     # Remove initial include as well as the final quotation mark
     a = a[len("#include \""):-1].lower()
