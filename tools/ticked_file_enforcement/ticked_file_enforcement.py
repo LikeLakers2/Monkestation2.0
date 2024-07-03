@@ -167,14 +167,8 @@ def get_base_scanning_directory_file_list():
     return results
 
 files_within_scanned_directory = get_base_scanning_directory_file_list()
-# In certain cases, we'll need a list that includes the exempt and forbidden files - so let's make
-# this a seperate variable.
-#
-# NOTE: We need to .copy() the file list, otherwise the -= operations right after will affect both
-# lists.
-files_within_scanned_directory_filtered = files_within_scanned_directory.copy()
-files_within_scanned_directory_filtered -= files_exempt_from_include
-files_within_scanned_directory_filtered -= files_forbidden_from_include
+files_within_scanned_directory -= files_exempt_from_include
+files_within_scanned_directory -= files_forbidden_from_include
 
 # Get the list of files that are included in `includes_file`.
 #
@@ -269,7 +263,7 @@ for file_path in matching:
 del matching
 
 # Is the includes file missing any includes? This is an error if it does.
-missing_includes = files_within_scanned_directory_filtered - includes_found_set
+missing_includes = files_within_scanned_directory - includes_found_set
 if len(missing_includes) != 0:
     tfe_has_failed = True
 for file_path in missing_includes:
@@ -278,12 +272,10 @@ del missing_includes
 
 # Does the includes file have any includes pointing to files that don't exist? This is an error if
 # it does.
-missing_files = includes_found_set - files_within_scanned_directory
-if len(missing_files) != 0:
-    tfe_has_failed = True
-for file_path in missing_files:
-    post_error(f"The includes file includes `{file_path}`, which does not exist.")
-del missing_files
+for file_path in includes_found_set:
+    if not file_path.exists():
+        tfe_has_failed = True
+        post_error(f"The includes file includes `{file_path}`, which does not exist.")
 ### RESULTS PROCESSING END ###
 
 if on_github:
