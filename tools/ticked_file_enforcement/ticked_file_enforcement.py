@@ -147,6 +147,7 @@ for file in files_forbidden_and_exempt:
 # Remove any files that are in both sets from the exempt list. This removes unnecessary warnings
 # later.
 files_exempt_from_include -= files_forbidden_and_exempt
+del files_forbidden_and_exempt
 
 # Get the list of .dm and .dmf files that are within `base_scanning_directory`.
 def get_base_scanning_directory_file_list():
@@ -169,7 +170,12 @@ files_within_scanned_directory = get_base_scanning_directory_file_list()
 files_within_scanned_directory -= files_exempt_from_include
 files_within_scanned_directory -= files_forbidden_from_include
 
-# Get the list of files that are included in `includes_file`
+# Get the list of files that are included in `includes_file`.
+#
+# NOTE: The variable below is a list rather than a set like the others are. This is intentional, as
+# we need to keep track of what order the includes came in. However, because operations such as
+# intersections will be useful to us, we still want a set - thus, after this list is populated,
+# we'll spend a little bit of time making a set version as well.
 includes_found = []
 with open(includes_file, 'r') as file:
     # Marks if we've ever seen a BEGIN_INCLUDE
@@ -230,6 +236,25 @@ with open(includes_file, 'r') as file:
     if inside_include_area:
         post_error(f"Missing END_INCLUDE marker.")
         perform_exit()
+
+# Create a set version of the includes found, because operations such as intersections are still
+# very useful to us.
+includes_found_set = set(includes_found)
+
+### RESULTS PROCESSING START ###
+# A marker to denote if Ticked File Enforcement has failed. We'll continue processing and print out
+# as much as we can (to help avoid requiring multiple runs), but at the end we will denote that
+# Ticked File Enforcement has found errors.
+tfe_has_failed = False
+
+# Does the includes file have any includes that match the exempt include globs? This is not
+# necessarily an error, but we give out a warning for it all the same.
+matching = includes_found_set & files_exempt_from_include
+for file_path in matching:
+    post_warn(f"The file path `{file_path}` matched a unincluded file glob, but was found in the includes file.")
+del matching
+
+### RESULTS PROCESSING END ###
 
 if on_github:
     print(f"::endgroup::")

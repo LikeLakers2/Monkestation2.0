@@ -1,5 +1,5 @@
 {
-	"includes_file": "tools/ticked_file_enforcement/tests/schema/exempt_include_glob_should_match_a_file.dme",
+	"includes_file": "tools/ticked_file_enforcement/tests/schema/exempt_include_globs_should_not_match_files_multiple_times.dme",
 	"base_scanning_directory": "tools/ticked_file_enforcement/tests/schema/",
 	"check_subdirectories": false,
 	"exempt_include_globs": [
