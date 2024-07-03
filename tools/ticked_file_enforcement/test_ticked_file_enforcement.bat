@@ -24,6 +24,8 @@ type tools\ticked_file_enforcement\tests\includes_file_must_not_have_forbidden_i
 echo.
 type tools\ticked_file_enforcement\tests\includes_file_must_not_include_a_file_multiple_times.json | tools\bootstrap\python tools\ticked_file_enforcement\ticked_file_enforcement.py
 echo.
+type tools\ticked_file_enforcement\tests\includes_file_must_not_include_nonexistent_files.json | tools\bootstrap\python tools\ticked_file_enforcement\ticked_file_enforcement.py
+echo.
 
 echo ---- FATAL ERROR TESTS ----
 type tools\ticked_file_enforcement\tests\includes_file_must_have_begin_include.json | tools\bootstrap\python tools\ticked_file_enforcement\ticked_file_enforcement.py
