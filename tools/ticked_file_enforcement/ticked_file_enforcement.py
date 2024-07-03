@@ -218,7 +218,6 @@ with open(includes_file, 'r') as file:
             file_path = file_path.strip(' "')
             # At this point, we should have the file path. So finally, prepend the DME's directory.
             file_path = includes_file.parent.joinpath(file_path)
-            file_path = pathlib.Path(file_path)
             if file_path in includes_found:
                 post_error(f"The file `{file_path}` is included multiple times.")
                 continue
@@ -267,6 +266,7 @@ for file_path in includes_found_set:
     if not file_path.exists():
         tfe_has_failed = True
         post_error(f"The includes file includes `{file_path}`, which does not exist.")
+        perform_exit() # TEMP: Remove this later, just want to make github logs more managable
 
 # Is the includes file missing any includes? This is an error if it does.
 missing_includes = files_within_scanned_directory - includes_found_set
@@ -274,6 +274,7 @@ if len(missing_includes) != 0:
     tfe_has_failed = True
 for file_path in missing_includes:
     post_error(f"The file path `{file_path}` is missing from the includes file.")
+    perform_exit() # TEMP: Remove this later, just want to make github logs more managable
 del missing_includes
 ### RESULTS PROCESSING END ###
 
