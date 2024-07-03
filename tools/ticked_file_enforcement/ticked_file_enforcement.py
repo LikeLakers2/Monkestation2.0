@@ -267,15 +267,12 @@ for file_path in includes_found_set:
         post_error(f"The includes file includes `{file_path}`, which does not exist.")
 
 # Is the includes file missing any includes? This is an error if it does.
-for scanned_file_path in files_within_scanned_directory:
-    found_this = False
-    for file_path in includes_found_set:
-        if fnmatch.fnmatch(scanned_file_path, file_path):
-            found_this = True
-            break
-
-    if not found_this:
-        post_error(f"The file path `{file_path}` is missing from the includes file.")
+missing_includes = files_within_scanned_directory - includes_found_set
+if len(missing_includes) != 0:
+    tfe_has_failed = True
+for file_path in missing_includes:
+    post_error(f"The file path `{file_path}` is missing from the includes file.")
+del missing_includes
 ### RESULTS PROCESSING END ###
 
 if on_github:
