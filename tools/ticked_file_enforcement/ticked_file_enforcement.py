@@ -254,6 +254,14 @@ for file_path in matching:
     post_warn(f"The file path `{file_path}` matched a unincluded file glob, but was found in the includes file.")
 del matching
 
+# Does the includes file have any forbidden includes? This is an error if it does.
+matching = includes_found_set & files_forbidden_from_include
+if len(matching) != 0:
+    tfe_has_failed = True
+for file_path in matching:
+    post_error(f"The file path `{file_path}` is forbidden from inclusion.")
+del matching
+
 ### RESULTS PROCESSING END ###
 
 if on_github:
