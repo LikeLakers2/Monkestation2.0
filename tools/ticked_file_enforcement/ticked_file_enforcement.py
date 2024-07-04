@@ -1,6 +1,8 @@
 import fnmatch
 import functools
 import glob
+import io
+import itertools
 import json
 import os
 import pathlib
@@ -177,7 +179,9 @@ files_within_scanned_directory -= files_forbidden_from_include
 # we need to keep track of what order the includes came in. However, because operations such as
 # intersections will be useful to us, we still want a set - thus, after this list is populated,
 # we'll spend a little bit of time making a set version as well.
+pre_include_text = ""
 includes_found = []
+post_include_text = ""
 with open(includes_file, 'r') as file:
     # Marks if we've ever seen a BEGIN_INCLUDE
     encountered_include_area = False
@@ -186,8 +190,8 @@ with open(includes_file, 'r') as file:
     # The number of lines between BEGIN_INCLUDE and END_INCLUDE that we've ignored.
     ignored_line_count = 0
 
-    for line in file:
-        line = line.strip()
+    for line_unstripped in file:
+        line = line_unstripped.strip()
         if line == "// BEGIN_INCLUDE":
             # If we're already inside the include area, we shouldn't be seeing a BEGIN_INCLUDE
             if inside_include_area:
@@ -231,6 +235,10 @@ with open(includes_file, 'r') as file:
 
         # If we're here, none of the above branches were taken, so we consider this line to be
         # ignored.
+        if not encountered_include_area and not inside_include_area:
+            pre_include_text += line_unstripped
+        if encountered_include_area and not inside_include_area:
+            post_include_text += line_unstripped
         pass
 
     # If we never entered the include area, then we never encountered a BEGIN_INCLUDE marker.
@@ -281,6 +289,74 @@ if len(missing_includes) != 0:
 for file_path in missing_includes:
     post_error(f"The file path `{file_path}` is missing from the includes file.")
 del missing_includes
+
+# Is the includes file in order?
+def compare_paths(a: pathlib.Path, b: pathlib.Path):
+    # If the two paths are the same, return 0
+    if a == b:
+        # We don't need to warn here, because if two lines are the same, we've already warned about
+        # duplicate includes.
+        return 0
+
+    path_segment_zip = itertools.zip_longest(
+        itertools.chain(reversed(a.parents), [a]),
+        itertools.chain(reversed(b.parents), [b]),
+        fillvalue=None
+    )
+
+    for (a_segment, b_segment) in path_segment_zip:
+        if a_segment == b_segment:
+            continue
+
+        # Is one a file, and the other a directory? The file goes first.
+        # NOTE: We place the results of the .is_file() calls into a variable. This allows us to
+        # avoid hammering the filesystem as much in later lines, should these two if statements not
+        # be met.
+        a_segment_is_file = a_segment.is_file()
+        if a_segment_is_file and b_segment.is_dir():
+            # Sort a before b.
+            return -1
+        b_segment_is_file = b_segment.is_file()
+        if a_segment.is_dir() and b_segment_is_file:
+            # Sort b before a.
+            return 1
+
+        ## At this point, we either have two directories, or two files, with different names.
+        # If they're both files, and one of them is a DMF, the DMF comes second.
+        if a_segment_is_file and b_segment_is_file:
+            if a_segment.suffix == '.dmf':
+                return 1
+            if b_segment.suffix == '.dmf':
+                return -1
+
+        # Otherwise, compare the final path component in a case-insensitive manner -
+        a_segment_name = a_segment.name.lower()
+        b_segment_name = b_segment.name.lower()
+        if a_segment_name < b_segment_name:
+            return -1
+        elif a_segment_name > b_segment_name:
+            return 1
+
+    # We shouldn't get here, but if we do, then send out an error.
+    post_error(f"The paths `{a}` and `{b}` somehow did not compare properly.")
+    return 0
+
+sorted_includes = sorted(includes_found, key = functools.cmp_to_key(compare_paths))
+if includes_found != sorted_includes:
+    tfe_has_failed = True
+    with io.StringIO() as result_string:
+        result_string.write(pre_include_text)
+        result_string.write("// BEGIN_INCLUDE\n")
+        for include in sorted_includes:
+            print(f'#include "{include}"', file=result_string)
+        result_string.write("// END_INCLUDE\n")
+        result_string.write(post_include_text)
+
+        with open(includes_file, "w") as includes_file_io:
+            includes_file_io.write(result_string.getvalue())
+
+    post_error("One or more includes was not sorted properly. The diff below shows the changes needed to make them sorted:")
+    os.system(f"git --no-pager diff --color=always {includes_file}")
 ### RESULTS PROCESSING END ###
 
 if on_github:
