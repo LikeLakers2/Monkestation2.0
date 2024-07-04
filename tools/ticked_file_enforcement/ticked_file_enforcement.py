@@ -362,54 +362,11 @@ if includes_found != sorted_includes:
     os.remove(f"{includes_file}.sorted")
 ### RESULTS PROCESSING END ###
 
+if tfe_has_failed:
+    post_notice("Please correct the above errors.")
+    perform_exit()
+
+post_ok(f"All includes for `{includes_file}` appear to be in order!")
+
 if on_github:
     print(f"::endgroup::")
-sys.exit() # TEMP: This prevents us from running the code below and getting a traceback. I'm more
-# interested in making sure the above code works.
-
-def compare_lines(a, b):
-    # Remove initial include as well as the final quotation mark
-    a = a[len("#include \""):-1].lower()
-    b = b[len("#include \""):-1].lower()
-
-    split_by_period = a.split('.')
-    a_suffix = ""
-    if len(split_by_period) >= 2:
-        a_suffix = split_by_period[len(split_by_period) - 1]
-    split_by_period = b.split('.')
-    b_suffix = ""
-    if len(split_by_period) >= 2:
-        b_suffix = split_by_period[len(split_by_period) - 1]
-
-    a_segments = a.split('\\')
-    b_segments = b.split('\\')
-
-    for (a_segment, b_segment) in zip(a_segments, b_segments):
-        a_is_file = a_segment.endswith(file_extensions)
-        b_is_file = b_segment.endswith(file_extensions)
-
-        # code\something.dm will ALWAYS come before code\directory\something.dm
-        if a_is_file and not b_is_file:
-            return -1
-
-        if b_is_file and not a_is_file:
-            return 1
-
-        # interface\something.dm will ALWAYS come after code\something.dm
-        if a_segment != b_segment:
-            # if we're at the end of a compare, then this is about the file name
-            # files with longer suffixes come after ones with shorter ones
-            if a_suffix != b_suffix:
-                return (a_suffix > b_suffix) - (a_suffix < b_suffix)
-            return (a_segment > b_segment) - (a_segment < b_segment)
-
-    print(f"Two lines were exactly the same ({a} vs. {b})")
-    sys.exit(1)
-
-sorted_lines = sorted(lines, key = functools.cmp_to_key(compare_lines))
-for (index, line) in enumerate(lines):
-    if sorted_lines[index] != line:
-        post_error(f"The include at line {index + offset} is out of order ({line}, expected {sorted_lines[index]})")
-        sys.exit(1)
-
-print(green(f"Ticked File Enforcement: [{file_reference}] All includes (for {len(scannable_files)} scanned files) are in order!"))
