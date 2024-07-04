@@ -344,6 +344,7 @@ def compare_paths(a: pathlib.Path, b: pathlib.Path):
 sorted_includes = sorted(includes_found, key = functools.cmp_to_key(compare_paths))
 if includes_found != sorted_includes:
     tfe_has_failed = True
+
     with io.StringIO() as result_string:
         result_string.write(pre_include_text)
         result_string.write("// BEGIN_INCLUDE\n")
@@ -353,11 +354,12 @@ if includes_found != sorted_includes:
         result_string.write("// END_INCLUDE\n")
         result_string.write(post_include_text)
 
-        with open(includes_file, "w") as includes_file_io:
+        with open(f"{includes_file}.sorted", "w") as includes_file_io:
             includes_file_io.write(result_string.getvalue())
 
     post_error("One or more includes was not sorted properly. The diff below shows the changes needed to make them sorted:")
-    os.system(f"git --no-pager diff --color=always {includes_file}")
+    os.system(f"git --no-pager diff --color=always --no-index {includes_file} {includes_file}.sorted")
+    os.remove(f"{includes_file}.sorted")
 ### RESULTS PROCESSING END ###
 
 if on_github:
