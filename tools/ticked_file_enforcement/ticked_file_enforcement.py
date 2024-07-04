@@ -81,6 +81,11 @@ if on_github:
     print(f"::group::Ticked File Enforcement [{includes_file}]")
 print(f"Processing `{includes_file}`...")
 
+# A marker to denote if Ticked File Enforcement has failed. We'll continue processing and print out
+# as much as we can (to help avoid requiring multiple runs), but at the end we will denote that
+# Ticked File Enforcement has found errors.
+tfe_has_failed = False
+
 # Before anything else, ensure our schema is even valid.
 ## The includes file must point to an existing file.
 if not includes_file.is_file():
@@ -228,6 +233,7 @@ with open(includes_file, 'r') as file:
             # path relative to our repo root.
             file_path = includes_file.parent.joinpath(file_path)
             if file_path in includes_found:
+                tfe_has_failed = True
                 post_error(f"The file `{file_path}` is included multiple times.")
                 continue
             includes_found.append(file_path)
@@ -256,11 +262,6 @@ with open(includes_file, 'r') as file:
 includes_found_set = set(includes_found)
 
 ### RESULTS PROCESSING START ###
-# A marker to denote if Ticked File Enforcement has failed. We'll continue processing and print out
-# as much as we can (to help avoid requiring multiple runs), but at the end we will denote that
-# Ticked File Enforcement has found errors.
-tfe_has_failed = False
-
 for file_path in includes_found_set:
     # Does the includes file have any includes that match the exempt include globs? This is not
     # necessarily an error, but we give out a warning for it all the same.
