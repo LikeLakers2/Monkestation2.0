@@ -350,7 +350,8 @@ if includes_found != sorted_includes:
         result_string.write(pre_include_text)
         result_string.write("// BEGIN_INCLUDE\n")
         for include in sorted_includes:
-            string_include = pathlib.PureWindowsPath(include)
+            include_unprefixed = include.relative_to(includes_file.parent)
+            string_include = pathlib.PureWindowsPath(include_unprefixed)
             print(f'#include "{string_include}"', file=result_string)
         result_string.write("// END_INCLUDE\n")
         result_string.write(post_include_text)

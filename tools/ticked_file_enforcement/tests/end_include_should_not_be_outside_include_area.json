@@ -2,6 +2,8 @@
 	"includes_file": "tools/ticked_file_enforcement/tests/end_include_should_not_be_outside_include_area.dme",
 	"base_scanning_directory": "tools/ticked_file_enforcement/tests/",
 	"check_subdirectories": false,
-	"exempt_include_globs": [],
+	"exempt_include_globs": [
+		"empty_file2.dm"
+	],
 	"forbidden_include_globs": []
 }

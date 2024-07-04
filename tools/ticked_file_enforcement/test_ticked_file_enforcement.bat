@@ -20,6 +20,8 @@ type tools\ticked_file_enforcement\tests\schema\forbidden_include_glob_should_ma
 echo.
 
 echo ---- ERROR TESTS ----
+type tools\ticked_file_enforcement\tests\includes_file_must_be_sorted.json | tools\bootstrap\python tools\ticked_file_enforcement\ticked_file_enforcement.py
+echo.
 type tools\ticked_file_enforcement\tests\includes_file_must_not_have_forbidden_includes.json | tools\bootstrap\python tools\ticked_file_enforcement\ticked_file_enforcement.py
 echo.
 type tools\ticked_file_enforcement\tests\includes_file_must_not_include_a_file_multiple_times.json | tools\bootstrap\python tools\ticked_file_enforcement\ticked_file_enforcement.py

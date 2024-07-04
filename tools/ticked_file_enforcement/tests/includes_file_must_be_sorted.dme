@@ -1,0 +1,4 @@
+// BEGIN_INCLUDE
+#include "empty_file2.dm"
+#include "empty_file.dm"
+// END_INCLUDE
