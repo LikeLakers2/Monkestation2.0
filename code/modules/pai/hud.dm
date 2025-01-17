@@ -31,10 +31,14 @@
 	if(!..())
 		return
 	var/mob/living/silicon/pai/pAI = usr
+	/* //MONKESTATION EDIT START - pAIs are being refactored
 	if(pAI.holoform)
 		pAI.fold_in(0)
 	else
 		pAI.fold_out()
+	*/ //MONKESTATION EDIT ORIGINAL
+	pAI.toggle_holochassis()
+	//MONKESTATION EDIT END
 
 /atom/movable/screen/pai/chassis
 	name = "Holochassis Appearance Composite"

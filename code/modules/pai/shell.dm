@@ -82,9 +82,11 @@
 	else
 		addtimer(VARSET_CALLBACK(src, holochassis_ready, TRUE), HOLOCHASSIS_OVERLOAD_COOLDOWN)
 	icon_state = "[chassis]"
+	/* //MONKESTATION REMOVAL START - pAIs are being refactored
 	if(!holoform)
 		. = fold_out(force)
 		return FALSE
+	*/ //MONKESTATION REMOVAL END
 	visible_message(span_notice("[src] deactivates its holochassis emitter and folds back into a compact card!"))
 	stop_pulling()
 	if(ispickedupmob(loc))
@@ -112,6 +114,7 @@
  * 	FALSE otherwise.
  */
 /mob/living/silicon/pai/proc/fold_out(force = FALSE)
+	/* //MONKESTATION REMOVAL START - pAIs are being refactored
 	if(holochassis_health < 0)
 		balloon_alert(src, "emitter repair incomplete")
 		return FALSE
@@ -124,6 +127,7 @@
 	if(!holochassis_ready)
 		balloon_alert(src, "emitters recycling...")
 		return FALSE
+	*/ //MONKESTATION REMOVAL END
 	holochassis_ready = FALSE
 	addtimer(VARSET_CALLBACK(src, holochassis_ready, TRUE), HOLOCHASSIS_COOLDOWN)
 	REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, PAI_FOLDED)

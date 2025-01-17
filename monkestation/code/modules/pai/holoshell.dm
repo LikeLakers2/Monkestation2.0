@@ -59,13 +59,15 @@
 
 /// Sets the pAI's holochassis, changing its current appearance if it's already folded out.
 ///
-/// @param {/datum/pai_holoshell} shell_typepath - A typepath to the holoshell we want to set our
-/// holochassis to.
+/// @param {typepath deriving /datum/pai_holoshell} shell_typepath - A typepath to the holoshell
+/// we want to set our holochassis to.
 ///
 /// @returns {boolean} - TRUE if the holochassis was set successfully. FALSE otherwise.
 /mob/living/silicon/pai/proc/set_holochassis(datum/pai_holoshell/shell_typepath)
-	if(!shell_typepath)
-		return FALSE
+	if(!ispath(shell_typepath))
+		CRASH("set_holochassis was given a non-typepath argument")
+	if(!ispath(shell_typepath, /datum/pai_holoshell))
+		CRASH("set_holochassis was given a typepath not deriving from /datum/pai_holoshell")
 	var/datum/pai_holoshell/shell_instance = new shell_typepath
 	src.current_holoshell = shell_instance
 	src.icon = shell_instance.normal_icon
@@ -77,3 +79,47 @@
 	src.update_appearance()
 	src.update_resting()
 	return TRUE
+
+/// Toggles the pAI between having its holochassis folded out and folded in.
+///
+/// @param {boolean} force - Force the toggle to happen.
+///
+/// @returns {boolean} - TRUE if the toggle was successful. FALSE otherwise.
+/mob/living/silicon/pai/proc/toggle_holochassis(force = FALSE)
+	// NOTE: This should probably be moved into the card, so we aren't dealing with the logistics
+	// on the mob side of things.
+	if(src.holo_in_use)
+		src.fold_in(force)
+	else
+		src.fold_out(force)
+
+/// Engage the pAI's holochassis form.
+///
+/// @param {boolean} force - Force the form to engage.
+///
+/// @returns {boolean} - TRUE if the form was successfully engaged, or was already engaged. FALSE
+/// otherwise.
+/mob/living/silicon/pai/fold_out(force = FALSE)
+	if(src.holo_in_use)
+		return TRUE
+	if(!src.holo_enabled && !force)
+		balloon_alert(src, "emitters are disabled")
+		return FALSE
+	if(!src.holo_health < 0)
+		balloon_alert(src, "emitter repair incomplete")
+		return FALSE
+	if(!src.holo_ready)
+		balloon_alert(src, "emitters recycling...")
+		return FALSE
+	. = ..()
+
+/// Returns the pAI to card mode.
+///
+/// @param {boolean} force - If TRUE, the pAI will be forced to card mode.
+///
+/// @returns {boolean} - TRUE if the pAI successfully returned to card mode, or was already in card
+/// mode. FALSE otherwise.
+/mob/living/silicon/pai/fold_in(force = FALSE)
+	if(!src.holo_in_use)
+		return TRUE
+	. = ..()
