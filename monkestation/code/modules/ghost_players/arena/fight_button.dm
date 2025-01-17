@@ -157,17 +157,8 @@
 		player_one.client.prefs.adjust_metacoins(player_one.ckey, payout, "Opponent did not have enough funds, reimbursed.", donator_multipler = FALSE)
 		return
 
-	prep_player(player_one, spawn_one)
-	prep_player(player_two, spawn_two)
-
-/obj/structure/fight_button/proc/prep_player(mob/living/carbon/human/ghost/player, obj/effect/landmark/duel_arena/dueler_spawn/spawn_location)
-	player.unequip_everything()
-	var/obj/item/weapon = new weapon_of_choice(src)
-	player.forceMove(get_turf(spawn_location))
-	player.put_in_active_hand(weapon, TRUE)
-	weapon.AddElement(/datum/element/area_locked, list(get_turf(spawn_location)))
-
-	SEND_SIGNAL(player, COMSIG_HUMAN_BEGIN_DUEL)
+	SEND_SIGNAL(player_one, COMSIG_HUMAN_BEGIN_DUEL, spawn_one, src.weapon_of_choice)
+	SEND_SIGNAL(player_two, COMSIG_HUMAN_BEGIN_DUEL, spawn_two, src.weapon_of_choice)
 
 /obj/structure/fight_button/proc/end_duel(mob/living/carbon/human/ghost/loser)
 	if(loser == player_one)
@@ -202,26 +193,47 @@
 	src.linked_fight_button = fight_button
 
 /datum/component/centcom_dueler/RegisterWithParent()
-	RegisterSignal(parent, COMSIG_HUMAN_BEGIN_DUEL, PROC_REF(begin_duel))
+	RegisterSignal(parent, COMSIG_HUMAN_BEGIN_DUEL, PROC_REF(ready_duel))
 	RegisterSignal(parent, COMSIG_HUMAN_END_DUEL, PROC_REF(end_duel))
 
 /datum/component/centcom_dueler/UnregisterFromParent()
 	UnregisterSignal(parent, list(COMSIG_HUMAN_BEGIN_DUEL, COMSIG_HUMAN_END_DUEL))
 
-/datum/component/centcom_dueler/proc/begin_duel()
-	src.dueler.fully_heal()
-
+/datum/component/centcom_dueler/proc/ready_duel(
+	obj/effect/landmark/duel_arena/dueler_spawn/spawn_location,
+	obj/item/weapon_typepath,
+)
+	// ---- PREPARE THE PLAYER ---- //
 	if(HAS_TRAIT(src.dueler, TRAIT_PACIFISM))
 		to_chat(src.dueler, span_notice("Your pacifism has been removed."))
 		// null will remove the trait from all sources
 		REMOVE_TRAIT(src.dueler, TRAIT_PACIFISM, null)
 
+	src.dueler.unequip_everything()
+	src.dueler.fully_heal()
+	src.dueler.forceMove(get_turf(spawn_location))
+	src.dueler.remove_status_effect(/datum/status_effect/centcom_grace)
+
 	src.dueler.equipOutfit(/datum/outfit/ghost_player)
+	var/obj/item/weapon = new weapon_of_choice(src)
+	src.dueler.put_in_active_hand(weapon, TRUE)
+	weapon.AddElement(/datum/element/area_locked, list(get_turf(spawn_location)))
+
 	src.dueler.dueling = TRUE
 
+	// ---- START THE COUNTDOWN ---- //
+	pass()
 	// TODO: We still need to handle spawning weapons and moving the player to their spawn location
 
 /datum/component/centcom_dueler/proc/end_duel()
 	src.dueler.dueling = FALSE
 
 	qdel(src)
+// Centcom dueler component should handle the following:
+// * Prepping the player mobs (i.e. Teleporting players to their spawn positions, giving them weapons, etc.)
+// * Making them immobile for a few seconds before the duel truly begins
+// * Monitoring vitals and notifying the dueling system of the winner
+// * Unprepping the player mobs (i.e. deleting the weapon) after the duel is over
+// * (Possibly?) managing the pacifism trait
+//
+// It should do all this by listening to signals from the fight button
