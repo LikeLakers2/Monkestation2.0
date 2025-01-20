@@ -16,6 +16,9 @@ on:
       max_required_byond_client:
         required: true
         type: string
+      run_create_and_destroy:
+        required: true
+        type: boolean
 
 jobs:
   run_integration_tests:
@@ -63,12 +66,12 @@ jobs:
       - name: Run Tests
         run: |
           source $HOME/BYOND/byond/bin/byondsetup
-          bash tools/ci/run_server.sh ${{ inputs.map }}
+          bash tools/ci/run_server.sh ${{ inputs.map }} ${{ inputs.run_create_and_destroy }}
       - name: Upload screenshot tests
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test_artifacts_${{ inputs.map }}_${{ inputs.major }}_${{ inputs.minor }}
+          name: test_artifacts_${{ inputs.map }}_${{ inputs.major }}_${{ inputs.minor }}_${{ inputs.run_create_and_destroy }}
           path: data/screenshots_new/
           retention-days: 1
       - name: Check client Compatibility

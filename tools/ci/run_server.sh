@@ -2,6 +2,7 @@
 set -o pipefail
 
 MAP=$1
+RUN_CREATE_AND_DESTROY_TEST=$2
 
 echo Testing $MAP
 
@@ -16,7 +17,11 @@ cp tools/ci/ci_config.txt ci_test/config/config.txt
 cp _maps/$MAP.json ci_test/data/next_map.json
 
 cd ci_test
-DreamDaemon tgstation.dmb -close -trusted -verbose -params "log-directory=ci"
+if [ $RUN_CREATE_AND_DESTROY_TEST == "true" ]; then
+	DreamDaemon tgstation.dmb -close -trusted -verbose -params "log-directory=ci&run-create-and-destroy=true"
+else
+	DreamDaemon tgstation.dmb -close -trusted -verbose -params "log-directory=ci&run-create-and-destroy=false"
+fi
 
 cd ..
 

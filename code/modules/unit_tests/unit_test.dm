@@ -340,7 +340,7 @@ GLOBAL_VAR_INIT(focused_tests, focused_tests())
 /proc/RunUnitTests()
 	CHECK_TICK
 
-	var/list/tests_to_run = subtypesof(/datum/unit_test)
+	var/list/tests_to_run = subtypesof(/datum/unit_test) - /datum/unit_test/create_and_destroy
 	var/list/focused_tests = list()
 	for (var/_test_to_run in tests_to_run)
 		var/datum/unit_test/test_to_run = _test_to_run
@@ -350,6 +350,25 @@ GLOBAL_VAR_INIT(focused_tests, focused_tests())
 		tests_to_run = focused_tests
 
 	sortTim(tests_to_run, GLOBAL_PROC_REF(cmp_unit_test_priority))
+
+	var/list/test_results = list()
+
+	for(var/unit_path in tests_to_run)
+		CHECK_TICK //We check tick first because the unit test we run last may be so expensive that checking tick will lock up this loop forever
+		RunUnitTest(unit_path, test_results)
+
+	var/file_name = "data/unit_tests.json"
+	fdel(file_name)
+	file(file_name) << json_encode(test_results)
+
+	SSticker.force_ending = ADMIN_FORCE_END_ROUND
+	//We have to call this manually because del_text can preceed us, and SSticker doesn't fire in the post game
+	SSticker.declare_completion()
+
+/proc/RunCreateAndDestroyTest()
+	CHECK_TICK
+
+	var/list/tests_to_run = list(/datum/unit_test/create_and_destroy)
 
 	var/list/test_results = list()
 

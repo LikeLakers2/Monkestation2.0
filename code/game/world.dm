@@ -205,7 +205,10 @@ GLOBAL_PROTECT(tracy_init_reason)
 	CONFIG_SET(number/round_end_countdown, 0)
 	var/datum/callback/cb
 #ifdef UNIT_TESTS
-	cb = CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(RunUnitTests))
+	if(params["run-create-and-destroy"] == "true")
+		cb = CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(RunCreateAndDestroyTest))
+	else
+		cb = CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(RunUnitTests))
 #else
 	cb = VARSET_CALLBACK(SSticker, force_ending, ADMIN_FORCE_END_ROUND)
 #endif
