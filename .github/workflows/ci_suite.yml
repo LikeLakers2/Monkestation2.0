@@ -187,9 +187,42 @@ jobs:
         run: |
           echo "max_required_byond_client=$(grep -Ev '^[[:blank:]]{0,}#{1,}|^[[:blank:]]{0,}$' .github/max_required_byond_client.txt | tail -n1)" >> $GITHUB_OUTPUT
 
+  compile_for_regular_testing:
+    name: Compile Maps for Integration Tests
+    needs: collect_data
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore BYOND cache
+        uses: actions/cache@v4
+        with:
+          path: ~/BYOND
+          key: ${{ runner.os }}-byond-${{ hashFiles('dependencies.sh') }}
+      - name: Compile Tests
+        id: compile_tests
+        run: |
+          bash tools/ci/install_byond.sh
+          source $HOME/BYOND/byond/bin/byondsetup
+          tools/build/build --ci dm -DCIBUILDING -DANSICOLORS -Werror
+      - name: Create the CI Deploy
+        run: |
+          bash tools/deploy.sh ci_test
+          mkdir ci_test/config
+          mkdir ci_test/data
+          cp tools/ci/ci_config.txt ci_test/config/config.txt
+      - uses: actions/upload-artifact@v4
+        id: ci_test_artifact_upload
+        with:
+          name: ci_test_artifact
+          path: ./ci_test/**
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 9
+
   run_all_tests:
     name: Integration Tests
-    needs: collect_data
+    needs: [collect_data, compile_for_regular_testing]
 
     strategy:
       fail-fast: false
@@ -200,6 +233,7 @@ jobs:
     with:
       map: ${{ matrix.map }}
       max_required_byond_client: ${{needs.collect_data.outputs.max_required_byond_client}}
+      use_precompiled_artifact: ci_test_artifact
 
   run_alternate_tests:
     if: needs.collect_data.outputs.alternate_tests != '[]'

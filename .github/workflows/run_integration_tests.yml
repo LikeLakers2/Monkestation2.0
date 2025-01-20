@@ -16,6 +16,9 @@ on:
       max_required_byond_client:
         required: true
         type: string
+      use_precompiled_artifact:
+        required: false
+        type: string
 
 jobs:
   run_integration_tests:
@@ -54,12 +57,27 @@ jobs:
           echo "BYOND_MAJOR=${{ inputs.major }}" >> $GITHUB_ENV
           echo "BYOND_MINOR=${{ inputs.minor }}" >> $GITHUB_ENV
         if: ${{ inputs.major }}
-      - name: Compile Tests
-        id: compile_tests
+      - name: Install BYOND
         run: |
           bash tools/ci/install_byond.sh
+      - name: Compile Tests and Deploy
+        # Needed for alternate tests, since they can use an alternate BYOND version
+        id: compile_tests
+        if: ${{ ! inputs.use_precompiled_artifact }}
+        run: |
           source $HOME/BYOND/byond/bin/byondsetup
           tools/build/build --ci dm -DCIBUILDING -DANSICOLORS -Werror
+          tools/deploy.sh ci_test
+          mkdir ci_test/config
+          mkdir ci_test/data
+          cp tools/ci/ci_config.txt ci_test/config/config.txt
+      - name: Download Artifact
+        # Used for non-alternate tests
+        if: ${{ inputs.use_precompiled_artifact }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.use_precompiled_artifact }}
+          path: ./ci_test/
       - name: Run Tests
         run: |
           source $HOME/BYOND/byond/bin/byondsetup
