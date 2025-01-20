@@ -190,35 +190,11 @@ jobs:
   compile_for_regular_testing:
     name: Compile Maps for Integration Tests
     needs: collect_data
-    runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
-      - name: Restore BYOND cache
-        uses: actions/cache@v4
-        with:
-          path: ~/BYOND
-          key: ${{ runner.os }}-byond-${{ hashFiles('dependencies.sh') }}
-      - name: Compile Tests
-        id: compile_tests
-        run: |
-          bash tools/ci/install_byond.sh
-          source $HOME/BYOND/byond/bin/byondsetup
-          tools/build/build --ci dm -DCIBUILDING -DANSICOLORS -Werror
-      - name: Create the CI Deploy
-        run: |
-          bash tools/deploy.sh ci_test
-          mkdir ci_test/config
-          mkdir ci_test/data
-          cp tools/ci/ci_config.txt ci_test/config/config.txt
-      - uses: actions/upload-artifact@v4
-        id: ci_test_artifact_upload
-        with:
-          name: ci_test_artifact
-          path: ./ci_test/**
-          if-no-files-found: error
-          retention-days: 1
-          compression-level: 9
+    uses: ./.github/workflows/compile_for_testing.yml
+    with:
+      max_required_byond_client: ${{needs.collect_data.outputs.max_required_byond_client}}
+      upload_to_artifact_name: ci_test_artifact
 
   run_all_tests:
     name: Integration Tests
@@ -233,7 +209,7 @@ jobs:
     with:
       map: ${{ matrix.map }}
       max_required_byond_client: ${{needs.collect_data.outputs.max_required_byond_client}}
-      use_precompiled_artifact: ci_test_artifact
+      precompiled_artifact: ci_test_artifact
 
   run_alternate_tests:
     if: needs.collect_data.outputs.alternate_tests != '[]'
@@ -244,7 +220,7 @@ jobs:
       matrix:
         setup: ${{ fromJSON(needs.collect_data.outputs.alternate_tests) }}
 
-    uses: ./.github/workflows/run_integration_tests.yml
+    uses: ./.github/workflows/run_alternate_tests.yml
     with:
       map: ${{ matrix.setup.map }}
       major: ${{ matrix.setup.major }}

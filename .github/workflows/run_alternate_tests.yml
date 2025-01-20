@@ -1,0 +1,34 @@
+name: Run Alternate Test
+on:
+  workflow_call:
+    inputs:
+      map:
+        required: true
+        type: string
+      major:
+        required: true
+        type: string
+      minor:
+        required: true
+        type: string
+      max_required_byond_client:
+        required: true
+        type: string
+
+jobs:
+  compile_for_alternate_test:
+    uses: ./.github/workflows/compile_for_testing.yml
+    with:
+      major: ${{ inputs.major }}
+      minor: ${{ inputs.minor }}
+      max_required_byond_client: ${{ inputs.max_required_byond_client }}
+      upload_to_artifact_name: ci_test_artifact_${{ inputs.major }}_${{ inputs.minor }}_${{ inputs.map }}
+
+  run_alternate_tests:
+    uses: ./.github/workflows/run_integration_tests.yml
+    with:
+      map: ${{ inputs.map }}
+      major: ${{ inputs.major }}
+      minor: ${{ inputs.minor }}
+      max_required_byond_client: ${{ inputs.max_required_byond_client }}
+      precompiled_artifact: ci_test_artifact_${{ inputs.major }}_${{ inputs.minor }}_${{ inputs.map }}

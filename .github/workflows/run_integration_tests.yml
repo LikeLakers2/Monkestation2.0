@@ -16,8 +16,8 @@ on:
       max_required_byond_client:
         required: true
         type: string
-      use_precompiled_artifact:
-        required: false
+      precompiled_artifact:
+        required: true
         type: string
 
 jobs:
@@ -60,23 +60,10 @@ jobs:
       - name: Install BYOND
         run: |
           bash tools/ci/install_byond.sh
-      - name: Compile Tests and Deploy
-        # Needed for alternate tests, since they can use an alternate BYOND version
-        id: compile_tests
-        if: ${{ ! inputs.use_precompiled_artifact }}
-        run: |
-          source $HOME/BYOND/byond/bin/byondsetup
-          tools/build/build --ci dm -DCIBUILDING -DANSICOLORS -Werror
-          tools/deploy.sh ci_test
-          mkdir ci_test/config
-          mkdir ci_test/data
-          cp tools/ci/ci_config.txt ci_test/config/config.txt
       - name: Download Artifact
-        # Used for non-alternate tests
-        if: ${{ inputs.use_precompiled_artifact }}
         uses: actions/download-artifact@v4
         with:
-          name: ${{ inputs.use_precompiled_artifact }}
+          name: ${{ inputs.precompiled_artifact }}
           path: ./ci_test/
       - name: Run Tests
         run: |
@@ -89,9 +76,3 @@ jobs:
           name: test_artifacts_${{ inputs.map }}_${{ inputs.major }}_${{ inputs.minor }}
           path: data/screenshots_new/
           retention-days: 1
-      - name: Check client Compatibility
-        if: always() && steps.compile_tests.outcome == 'success'
-        uses: tgstation/byond-client-compatibility-check@v3
-        with:
-          dmb-location: tgstation.dmb
-          max-required-client-version: ${{inputs.max_required_byond_client}}

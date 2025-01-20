@@ -1,0 +1,57 @@
+name: Compile for Integration Testing
+on:
+  workflow_call:
+    inputs:
+      major:
+        required: false
+        type: string
+      minor:
+        required: false
+        type: string
+      max_required_byond_client:
+        required: true
+        type: string
+      upload_to_artifact_name:
+        required: true
+        type: string
+
+jobs:
+  compile_for_integration_testing:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore BYOND cache
+        uses: actions/cache@v4
+        with:
+          path: ~/BYOND
+          key: ${{ runner.os }}-byond-${{ hashFiles('dependencies.sh') }}
+      - name: Configure version
+        if: ${{ inputs.major }}
+        run: |
+          echo "BYOND_MAJOR=${{ inputs.major }}" >> $GITHUB_ENV
+          echo "BYOND_MINOR=${{ inputs.minor }}" >> $GITHUB_ENV
+      - name: Compile Tests
+        id: compile_tests
+        run: |
+          bash tools/ci/install_byond.sh
+          source $HOME/BYOND/byond/bin/byondsetup
+          tools/build/build --ci dm -DCIBUILDING -DANSICOLORS -Werror
+      - name: Create the CI Deploy
+        run: |
+          bash tools/deploy.sh ci_test
+          mkdir ci_test/config
+          mkdir ci_test/data
+          cp tools/ci/ci_config.txt ci_test/config/config.txt
+      - name: Check client Compatibility
+        if: always() && steps.compile_tests.outcome == 'success'
+        uses: tgstation/byond-client-compatibility-check@v3
+        with:
+          dmb-location: tgstation.dmb
+          max-required-client-version: ${{inputs.max_required_byond_client}}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.upload_to_artifact_name }}
+          path: ./ci_test/**
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 9
