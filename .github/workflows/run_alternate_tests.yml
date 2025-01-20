@@ -25,6 +25,7 @@ jobs:
       upload_to_artifact_name: ci_test_artifact_${{ inputs.major }}_${{ inputs.minor }}_${{ inputs.map }}
 
   run_alternate_tests:
+    needs: compile_for_alternate_test
     uses: ./.github/workflows/run_integration_tests.yml
     with:
       map: ${{ inputs.map }}
