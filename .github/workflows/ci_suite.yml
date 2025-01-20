@@ -195,13 +195,11 @@ jobs:
       fail-fast: false
       matrix:
         map: ${{ fromJSON(needs.collect_data.outputs.maps).paths }}
-        run_create_and_destroy: [true, false]
 
     uses: ./.github/workflows/run_integration_tests.yml
     with:
       map: ${{ matrix.map }}
       max_required_byond_client: ${{needs.collect_data.outputs.max_required_byond_client}}
-      run_create_and_destroy: ${{ matrix.run_create_and_destroy }}
 
   run_alternate_tests:
     if: needs.collect_data.outputs.alternate_tests != '[]'
@@ -211,7 +209,6 @@ jobs:
       fail-fast: false
       matrix:
         setup: ${{ fromJSON(needs.collect_data.outputs.alternate_tests) }}
-        run_create_and_destroy: [true, false]
 
     uses: ./.github/workflows/run_integration_tests.yml
     with:
@@ -219,7 +216,6 @@ jobs:
       major: ${{ matrix.setup.major }}
       minor: ${{ matrix.setup.minor }}
       max_required_byond_client: ${{needs.collect_data.outputs.max_required_byond_client}}
-      run_create_and_destroy: ${{ matrix.run_create_and_destroy }}
 
   compare_screenshots:
     if: needs.collect_data.outputs.alternate_tests == '[]' || needs.run_alternate_tests.result == 'success'
