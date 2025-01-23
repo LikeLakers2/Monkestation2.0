@@ -104,16 +104,10 @@
 	if(HAS_TRAIT(owner, TRAIT_FEARLESS))
 		return
 	if(trigger_regex.Find(speech_args[SPEECH_MESSAGE]) != 0)
-		//MONKESTATION EDIT START - Phobias should not prevent forced speech (such as through tourettes)
-		if(speech_args[SPEECH_FORCED])
-			// Freak out
-			addtimer(CALLBACK(src, PROC_REF(freak_out), null, trigger_regex.group[2], TRUE), 10)
-			return
-		//MONKESTATION EDIT END
 		to_chat(owner, span_warning("You can't bring yourself to say the word \"[span_phobia("[trigger_regex.group[2]]")]\"!"))
 		speech_args[SPEECH_MESSAGE] = ""
 
-/datum/brain_trauma/mild/phobia/proc/freak_out(atom/reason, trigger_word, said_not_heard = FALSE)
+/datum/brain_trauma/mild/phobia/proc/freak_out(atom/reason, trigger_word)
 	COOLDOWN_START(src, scare_cooldown, 12 SECONDS)
 	if(owner.stat == DEAD)
 		return
@@ -121,10 +115,7 @@
 	if(reason)
 		to_chat(owner, span_userdanger("Seeing [reason] [message]!"))
 	else if(trigger_word)
-		if(said_not_heard)
-			to_chat(owner, span_userdanger("Saying \"[trigger_word]\" [message]!"))
-		else
-			to_chat(owner, span_userdanger("Hearing \"[trigger_word]\" [message]!"))
+		to_chat(owner, span_userdanger("Hearing \"[trigger_word]\" [message]!"))
 	else
 		to_chat(owner, span_userdanger("Something [message]!"))
 	var/reaction = rand(1,4)
