@@ -812,7 +812,7 @@ Basically, we fill the time between now and 2s from now with hands based off the
 	color = "#c92eb4"
 	ph = 13.9
 	metabolization_rate = 0.05 * REM
-	tox_damage = 0
+	//tox_damage = 0 //MONKESTATION REMOVAL - We don't allow inverse reagents to deal toxin damage, per #3518
 
 /datum/reagent/inverse/rezadone/on_mob_metabolize(mob/living/carbon/affected_mob)
 	. = ..()
