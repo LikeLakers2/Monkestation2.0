@@ -58,7 +58,9 @@
 
 		if(3)
 			to_chat(owner, span_warning("You lose your balance!"))
+			/* //MONKESTATION REMOVAL - Requires tgstation#79721, which has not been ported
 			owner.adjust_staggered_up_to(2 SECONDS * stacks, 20 SECONDS)
+			*/
 			owner.add_movespeed_modifier(/datum/movespeed_modifier/status_effect/spooked)
 			// We're relying on the fact that there's a 12 second application cooldown to not have to bother cancelling and replacing this timer
 			// So if you adjust the duration keep that in mind
