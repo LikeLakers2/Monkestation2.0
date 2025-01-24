@@ -62,7 +62,7 @@ GLOBAL_LIST_INIT(phobia_mobs, list(
 	)),
 	"anime" = typecacheof(list(
 		/mob/living/basic/guardian,
-		/mob/living/basic/migo/hatsune
+		// /mob/living/basic/migo/hatsune, //MONKESTATION REMOVAL - We don't have this, but this line was pulled in as part of porting tgstation#89098
 	)),
 	"authority" = typecacheof(list(
 		/mob/living/basic/trooper/nanotrasen,
@@ -73,7 +73,7 @@ GLOBAL_LIST_INIT(phobia_mobs, list(
 		/mob/living/basic/chicken,
 		/mob/living/basic/parrot,
 		/mob/living/basic/pet/penguin,
-		/mob/living/basic/raptor,
+		// /mob/living/basic/raptor, //MONKESTATION REMOVAL - We don't have this, but this line was pulled in as part of porting tgstation#89098
 	)),
 	"conspiracies" = typecacheof(list(
 		/mob/living/basic/drone,
@@ -367,7 +367,7 @@ GLOBAL_LIST_INIT(phobia_objs, list(
 		/obj/item/clothing/head/fedora/carpskin,
 		/obj/item/clothing/mask/gas/carp,
 		/obj/item/clothing/head/soft/fishing_hat,
-		/obj/item/cigarette/carp,
+		// /obj/item/cigarette/carp, //MONKESTATION REMOVAL - We don't have this, but this line was pulled in as part of porting tgstation#89098
 		/obj/item/clothing/under/suit/carpskin,
 		/obj/item/fish,
 		/obj/item/fishing_hook,
@@ -377,12 +377,13 @@ GLOBAL_LIST_INIT(phobia_objs, list(
 		/obj/item/food/fishfingers,
 		/obj/item/food/fishfry,
 		/obj/item/food/fishmeat,
-		/obj/item/food/nugget/fish,
+		// /obj/item/food/nugget/fish, //MONKESTATION REMOVAL - We don't have this, but this line was pulled in as part of porting tgstation#89098
 		/obj/item/food/volt_fish,
 		/obj/item/grenade/clusterbuster/spawner_spesscarp,
 		/obj/item/grenade/spawnergrenade/spesscarp,
 		/obj/item/knife/carp,
 		/obj/item/nullrod/carp,
+		/* //MONKESTATION REMOVAL - We don't have these, but these lines were pulled in as part of porting tgstation#89098
 		/obj/item/organ/brain/carp,
 		/obj/item/organ/heart/carp,
 		/obj/item/organ/liver/fish,
@@ -391,6 +392,7 @@ GLOBAL_LIST_INIT(phobia_objs, list(
 		/obj/item/organ/stomach/fish,
 		/obj/item/organ/tail/fish,
 		/obj/item/organ/tongue/carp,
+		*/
 		/obj/item/storage/fancy/cigarettes/cigpack_carp,
 		/obj/item/storage/toolbox/fishing,
 		/obj/item/stack/sheet/animalhide/carp,
@@ -568,10 +570,10 @@ GLOBAL_LIST_INIT(phobia_species, list(
 		/datum/species/plasmaman,
 		/datum/species/skeleton,
 	)),
-	"space" = typecacheof(list(/datum/species/voidwalker)),
+	// "space" = typecacheof(list(/datum/species/voidwalker)), //MONKESTATION REMOVAL - We don't have this, but this line was pulled in as part of porting tgstation#89098
 	"the supernatural" = typecacheof(list(
 		/datum/species/golem/runic,
-		/datum/species/voidwalker,
+		// /datum/species/voidwalker, //MONKESTATION REMOVAL - We don't have this, but this line was pulled in as part of porting tgstation#89098
 	)),
 ))
 
