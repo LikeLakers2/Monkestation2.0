@@ -58,9 +58,12 @@
 
 		if(3)
 			to_chat(owner, span_warning("You lose your balance!"))
-			/* //MONKESTATION REMOVAL - Requires tgstation#79721, which has not been ported
+			// MONKESTATION EDIT START
+			/* //MONKESTATION EDIT ORIGINAL - Requires tgstation#79721, which has not been ported
 			owner.adjust_staggered_up_to(2 SECONDS * stacks, 20 SECONDS)
-			*/
+			*/ // So instead we replace this with a temporary Pushover trait
+			owner.adjust_timed_status_effect(2 SECONDS * stacks, /datum/status_effect/temporary_pushover, 20 SECONDS)
+			// MONKESTATION EDIT END
 			owner.add_movespeed_modifier(/datum/movespeed_modifier/status_effect/spooked)
 			// We're relying on the fact that there's a 12 second application cooldown to not have to bother cancelling and replacing this timer
 			// So if you adjust the duration keep that in mind

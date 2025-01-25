@@ -36,3 +36,5 @@
 #define TRAIT_SLASHER "slasher_trait"
 /// Source trait for zombies
 #define ZOMBIE_TRAIT "zombie_trait"
+/// Trait source for the temporary_pushover status effect
+#define TEMPORARY_PUSHOVER_STATUS "temporary_pushover_status"
