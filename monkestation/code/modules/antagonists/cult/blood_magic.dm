@@ -5,7 +5,7 @@
 	if(QDELETED(cult))
 		return
 	user.visible_message(span_warning("[user] holds up [user.p_their()] hand, which explodes in a flash of red light!"), \
-						span_cultitalic("You attempt to stun [target] with the spell!"))
+						span_cult_italic("You attempt to stun [target] with the spell!"))
 	user.mob_light(range = 3, color = LIGHT_COLOR_BLOOD_MAGIC, duration = 0.2 SECONDS)
 	if(!snowflake_martial_arts_handler(target, user))
 		if(IS_HERETIC(target))
@@ -41,8 +41,8 @@
 	to_chat(user, span_warning("The spell had no effect!"), type = MESSAGE_TYPE_COMBAT)
 
 /obj/item/melee/blood_magic/stun/proc/effect_henderson(mob/living/target, mob/living/carbon/user)
-	to_chat(user, span_cultitalic("[target] is barely phased by your spell, rambling with drunken annoyance instead!"), type = MESSAGE_TYPE_COMBAT)
-	to_chat(target, span_cultboldtalic("Eldritch horrors try to flood your thoughts, before being drowned out by an intense alcoholic haze!"), type = MESSAGE_TYPE_COMBAT) // yeah nobody's gonna be able to understand you through the slurring but it's funny anyways
+	to_chat(user, span_cult_italic("[target] is barely phased by your spell, rambling with drunken annoyance instead!"), type = MESSAGE_TYPE_COMBAT)
+	to_chat(target, span_cult_bold_italic("Eldritch horrors try to flood your thoughts, before being drowned out by an intense alcoholic haze!"), type = MESSAGE_TYPE_COMBAT) // yeah nobody's gonna be able to understand you through the slurring but it's funny anyways
 	target.say("MUCKLE DAMRED CULT! 'AIR EH NAMBLIES BE KEEPIN' ME WEE MEN!?!!", forced = "drunk cult stun")
 	target.adjust_silence(15 SECONDS)
 	target.adjust_confusion(15 SECONDS)
@@ -50,7 +50,7 @@
 
 /obj/item/melee/blood_magic/stun/proc/effect_weakened(mob/living/target, mob/living/carbon/user, silent = FALSE)
 	if(!silent)
-		to_chat(user, span_cultitalic("In a brilliant flash of red, [target] falls to the ground, [target.p_their()] strength drained, albeit managing to somewhat resist the effects!"), type = MESSAGE_TYPE_COMBAT)
+		to_chat(user, span_cult_italic("In a brilliant flash of red, [target] falls to the ground, [target.p_their()] strength drained, albeit managing to somewhat resist the effects!"), type = MESSAGE_TYPE_COMBAT)
 		to_chat(target, span_userdanger("You barely manage to resist [user]'s spell, falling to the ground in agony, but still able to gather enough strength to act!"), type = MESSAGE_TYPE_COMBAT)
 	target.emote("scream")
 	target.AdjustKnockdown(5 SECONDS)
@@ -61,7 +61,7 @@
 	target.set_jitter_if_lower(20 SECONDS)
 
 /obj/item/melee/blood_magic/stun/proc/effect_full(mob/living/target, mob/living/carbon/user)
-	to_chat(user, span_cultitalic("In a brilliant flash of red, [target] crumples to the ground!"), type = MESSAGE_TYPE_COMBAT)
+	to_chat(user, span_cult_italic("In a brilliant flash of red, [target] crumples to the ground!"), type = MESSAGE_TYPE_COMBAT)
 	target.Paralyze(16 SECONDS)
 	target.flash_act(1, TRUE)
 	if(issilicon(target))

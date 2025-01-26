@@ -139,7 +139,7 @@
 		return
 
 	if (!thirst_satiated)
-		to_chat(source, span_cultitalic("The thirst is satisfied... for now."))
+		to_chat(source, span_cult_italic("The thirst is satisfied... for now."))
 	thirst_satiated = TRUE
 	deltimer(thirst_timer)
 	thirst_timer = addtimer(VARSET_CALLBACK(src, thirst_satiated, FALSE), 3 MINUTES, TIMER_STOPPABLE | TIMER_DELETE_ME)
@@ -164,7 +164,7 @@
 		"You think about biting someone's throat.",
 		"Your stomach growls and you feel a metallic taste in your mouth.",
 	)
-	to_chat(human, span_cultitalic(pick(blood_messages)))
+	to_chat(human, span_cult_italic(pick(blood_messages)))
 
 	return ..()
 

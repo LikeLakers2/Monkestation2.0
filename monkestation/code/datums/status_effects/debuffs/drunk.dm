@@ -10,5 +10,5 @@
 	SIGNAL_HANDLER
 	if(drunk_value < OLD_MAN_HENDERSON_DRUNKENNESS || owner.stat == DEAD)
 		return NONE
-	owner.visible_message(span_cultitalic("[owner] is unfazed by the rune, grumbling with incoherent drunken annoyance instead!"))
+	owner.visible_message(span_cult_italic("[owner] is unfazed by the rune, grumbling with incoherent drunken annoyance instead!"))
 	return STOP_SACRIFICE

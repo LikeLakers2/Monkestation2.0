@@ -793,7 +793,7 @@ Striking a noncultist, however, will tear their flesh."}
 		return FALSE //no akimbo wielding magic lol.
 	. = ..()
 	if(!IS_CULTIST(user))
-		to_chat(user, span_cultlarge("\"Did you truly think that you could channel MY blood without my approval? Amusing, but futile.\""))
+		to_chat(user, span_cult_large("\"Did you truly think that you could channel MY blood without my approval? Amusing, but futile.\""))
 		if(iscarbon(user))
 			var/mob/living/carbon/C = user
 			if(C.active_hand_index == 1)

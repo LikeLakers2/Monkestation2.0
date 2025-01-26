@@ -1249,7 +1249,7 @@
 		if((L.mob_biotypes & MOB_UNDEAD) || isgolem(L) || HAS_TRAIT(L, TRAIT_RESISTCOLD))
 			continue //Do not affect our brothers
 
-		to_chat(L, span_cultlarge("A spine-chilling sound chills you to the bone!"))
+		to_chat(L, span_cult_large("A spine-chilling sound chills you to the bone!"))
 		L.apply_status_effect(/datum/status_effect/bonechill)
 		L.add_mood_event("spooked", /datum/mood_event/spooked)
 

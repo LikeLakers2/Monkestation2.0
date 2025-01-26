@@ -64,7 +64,7 @@
 		return FALSE
 
 	if(!brain.modular_persistence)
-		to_chat(user, span_cultlarge("The ethereal forces of reality forbid debonding the NIF! Okay seriously, tell an admin lmao."))
+		to_chat(user, span_cult_large("The ethereal forces of reality forbid debonding the NIF! Okay seriously, tell an admin lmao."))
 		CRASH("[user.ckey] attempted NIF debonding for [target.ckey], but no modular persistence datum was found. This shouldn't happen.")
 
 	nif.Remove(target)

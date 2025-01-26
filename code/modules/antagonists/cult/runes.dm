@@ -279,7 +279,7 @@ structure_check() searches for nearby cultist structures required for the invoca
 
 	// monke start: old man henderson
 	if(convertee.get_drunk_amount() >= OLD_MAN_HENDERSON_DRUNKENNESS)
-		convertee.visible_message(span_cultitalic("[convertee] is unfazed by the rune, grumbling with incoherent drunken annoyance instead!"))
+		convertee.visible_message(span_cult_italic("[convertee] is unfazed by the rune, grumbling with incoherent drunken annoyance instead!"))
 		for(var/invoker in invokers)
 			to_chat(invoker, span_warning("The rune's blood magic is ineffective on [convertee], unable to pierce the intense alcoholic haze clouding [convertee.p_their()] mind!"))
 		return FALSE

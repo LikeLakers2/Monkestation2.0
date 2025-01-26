@@ -376,7 +376,7 @@
 	if(IS_CULTIST(affected_mob))
 		for(var/datum/action/innate/cult/blood_magic/BM in affected_mob.actions)
 			for(var/datum/action/innate/cult/blood_spell/BS in BM.spells)
-				to_chat(affected_mob, span_cultlarge("Your blood rites falter as holy water scours your body!"))
+				to_chat(affected_mob, span_cult_large("Your blood rites falter as holy water scours your body!"))
 				qdel(BS)
 
 	var/list/phrase_list
