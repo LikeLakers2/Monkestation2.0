@@ -30,6 +30,12 @@
 
 /obj/structure/spacevine/Initialize(mapload)
 	. = ..()
+	add_atom_colour("#ffffff", FIXED_COLOUR_PRIORITY)
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = PROC_REF(on_entered),
+	)
+	AddElement(/datum/element/connect_loc, loc_connections)
+	AddElement(/datum/element/atmos_sensitive, mapload)
 	//MONKESTATION EDIT START
 	var/area/area = get_area(src)
 	if(istype(area, /area/centcom))
@@ -37,12 +43,6 @@
 		visible_message(span_warning("AUTOMATIC BLUESPACE HEDGE TRIMMING PROTOCOL ACTIVATED!"))
 		qdel(src)
 	//MONKESTATION EDIT STOP
-	add_atom_colour("#ffffff", FIXED_COLOUR_PRIORITY)
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = PROC_REF(on_entered),
-	)
-	AddElement(/datum/element/connect_loc, loc_connections)
-	AddElement(/datum/element/atmos_sensitive, mapload)
 
 /obj/structure/spacevine/examine(mob/user)
 	. = ..()
