@@ -301,7 +301,7 @@ GLOBAL_LIST_EMPTY(cached_mixer_channels)
 	to_chat(src,"<span class='notice'>Lobby music: <b>[T.title]</b> by <b>[T.artist]</b>.</span>")
 
 /proc/get_rand_frequency()
-	return rand(32000, 55000) //Frequency stuff only works with 45kbps oggs.
+	return 0.75 + (rand() / 2) // Between 0.75x and 1.25x frequency
 
 /proc/get_sfx(soundin)
 	if(istext(soundin))
