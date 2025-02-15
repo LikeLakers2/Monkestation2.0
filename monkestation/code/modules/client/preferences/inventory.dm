@@ -17,21 +17,26 @@
 
 
 /datum/preferences/proc/load_metacoins(ckey)
-	if(!ckey || !SSdbcore.IsConnected())
+	if(!ckey)
 		metacoins = 5000
 		return
-	var/datum/db_query/query_get_metacoins = SSdbcore.NewQuery("SELECT metacoins FROM [format_table_name("player")] WHERE ckey = '[ckey]'")
-	var/mc_count = 0
-	if(query_get_metacoins.warn_execute())
-		if(query_get_metacoins.NextRow())
-			mc_count = query_get_metacoins.item[1]
 
-	qdel(query_get_metacoins)
-	metacoins = text2num(mc_count)
+	if(SSdbcore.IsConnected())
+		var/datum/db_query/query_get_metacoins = SSdbcore.NewQuery("SELECT metacoins FROM [format_table_name("player")] WHERE ckey = '[ckey]'")
+		var/mc_count = 0
+		if(query_get_metacoins.warn_execute())
+			if(query_get_metacoins.NextRow())
+				mc_count = query_get_metacoins.item[1]
+
+		qdel(query_get_metacoins)
+		metacoins = text2num(mc_count)
+	else
+		//File fallback - intended for use only during debugging
+		metacoins = savefile.get_entry("metacoins", 5000)
 
 
 /datum/preferences/proc/adjust_metacoins(ckey, amount, reason = null, announces = TRUE, donator_multipler = TRUE, respects_roundcap = FALSE)
-	if(!ckey || !SSdbcore.IsConnected())
+	if(!ckey)
 		return FALSE
 
 	//RoundCap Checks
@@ -66,10 +71,7 @@
 
 	logger.Log(LOG_CATEGORY_META, "[parent]'s monkecoins were changed by [amount] Reason: [reason]", list("currency_left" = metacoins, "reason" = reason))
 
-	//SQL query - updates the metacoins in the database (this is where the storage actually happens)
-	var/datum/db_query/query_inc_metacoins = SSdbcore.NewQuery("UPDATE [format_table_name("player")] SET metacoins = metacoins + '[amount]' WHERE ckey = '[ckey]'")
-	query_inc_metacoins.warn_execute()
-	qdel(query_inc_metacoins)
+	save_metacoins(ckey)
 
 	//Output to chat
 	if(announces)
@@ -78,6 +80,20 @@
 		else
 			to_chat(parent, "<span class='rose bold'>[abs(amount)] Monkecoins have been [amount >= 0 ? "deposited to" : "withdrawn from"] your account!</span>")
 	return TRUE
+
+/datum/preferences/proc/save_metacoins(ckey)
+	if(!ckey)
+		return FALSE
+
+	if(SSdbcore.IsConnected())
+		//SQL query - updates the metacoins in the database (this is where the storage actually happens)
+		var/datum/db_query/query_inc_metacoins = SSdbcore.NewQuery("UPDATE [format_table_name("player")] SET metacoins = [metacoins] WHERE ckey = '[ckey]'")
+		query_inc_metacoins.warn_execute()
+		qdel(query_inc_metacoins)
+	else
+		//File fallback - intended for use only during debugging
+		savefile.set_entry("metacoins", metacoins)
+		savefile.save()
 
 /datum/preferences/proc/has_coins(amount)
 	if(amount > metacoins)
