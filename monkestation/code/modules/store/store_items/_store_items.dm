@@ -40,32 +40,12 @@
 /datum/store_item/proc/finalize_purchase(client/buyer)
 	SHOULD_CALL_PARENT(TRUE)
 
-	var/fail_message = span_warning("Failed to add purchase to database. You have not been charged.")
-	if(!SSdbcore.IsConnected())
-		to_chat(buyer, fail_message)
-		return FALSE
 	if(!buyer?.prefs)
 		return FALSE
-	if(!buyer.prefs.inventory[item_path])
-		buyer.prefs.inventory += item_path
-		var/datum/db_query/query_add_gear_purchase = SSdbcore.NewQuery({"
-			INSERT INTO [format_table_name("metacoin_item_purchases")] (`ckey`, `item_id`, `amount`) VALUES (:ckey, :item_id, :amount)"},
-			list("ckey" = buyer.ckey, "item_id" = item_path, "amount" = 1))
-		if(!query_add_gear_purchase.Execute())
-			to_chat(buyer, fail_message)
-			qdel(query_add_gear_purchase)
-			return FALSE
-		qdel(query_add_gear_purchase)
-	else
-		buyer.prefs.inventory += item_path
-		var/datum/db_query/query_add_gear_purchase = SSdbcore.NewQuery({"
-			UPDATE [format_table_name("metacoin_item_purchases")] SET amount = :amount WHERE ckey = :ckey AND item_id = :item_id"},
-			list("ckey" = buyer.ckey, "item_id" = item_path, "amount" = 1))
-		if(!query_add_gear_purchase.Execute())
-			to_chat(buyer, fail_message)
-			qdel(query_add_gear_purchase)
-			return FALSE
-		qdel(query_add_gear_purchase)
+
+	if(!buyer.prefs.add_item_to_inventory(item_path))
+		to_chat(buyer, span_warning("Failed to add purchase to database. You have not been charged."))
+		return FALSE
 
 	return TRUE
 

@@ -3,18 +3,56 @@
 /datum/preferences/proc/load_inventory(ckey)
 	if(!ckey || !SSdbcore.IsConnected())
 		return
-	var/datum/db_query/query_gear = SSdbcore.NewQuery(
-		"SELECT item_id,amount FROM [format_table_name("metacoin_item_purchases")] WHERE ckey = :ckey",
-		list("ckey" = ckey)
-	)
-	if(!query_gear.Execute())
-		qdel(query_gear)
-		return
-	while(query_gear.NextRow())
-		var/key = query_gear.item[1]
-		inventory += text2path(key)
-	qdel(query_gear)
 
+	if(SSdbcore.IsConnected())
+		var/datum/db_query/query_gear = SSdbcore.NewQuery(
+			"SELECT item_id,amount FROM [format_table_name("metacoin_item_purchases")] WHERE ckey = :ckey",
+			list("ckey" = ckey)
+		)
+		if(!query_gear.Execute())
+			qdel(query_gear)
+			return
+		while(query_gear.NextRow())
+			var/key = query_gear.item[1]
+			inventory += text2path(key)
+		qdel(query_gear)
+	else
+		var/items = savefile.get_entry("metacoin_item_purchases", list())
+		for(var/key in items)
+			inventory += text2path(key)
+
+// Adds an item to the player's inventory.
+//
+// Items will always be added to the player's current-round inventory. However, adding the item to
+// the player's persistent inventory may fail - and as such, this returns a boolean describing
+// whether adding the item to the player's persistent inventory succeeded.
+//
+// The following is a (potentially non-exhaustive) list of reasons why this might return FALSE:
+// * The database is enabled in the config, but is not currently connected
+// * The database query failed for one reason or another
+/datum/preferences/proc/add_item_to_inventory(item_id)
+	if(inventory[item_id])
+		return TRUE
+
+	inventory += item_id
+	if(CONFIG_GET(flag/sql_enabled))
+		if(!SSdbcore.IsConnected())
+			return FALSE
+
+		var/datum/db_query/query_add_gear_purchase = SSdbcore.NewQuery({"
+			INSERT INTO [format_table_name("metacoin_item_purchases")] (`ckey`, `item_id`, `amount`) VALUES (:ckey, :item_id, :amount)"},
+			list("ckey" = parent.ckey, "item_id" = item_id, "amount" = 1))
+		if(!query_add_gear_purchase.Execute())
+			qdel(query_add_gear_purchase)
+			return FALSE
+		qdel(query_add_gear_purchase)
+	else
+		//File fallback - intended for use only during debugging
+		var/list/metacoin_items = savefile.get_entry("metacoin_item_purchases", list())
+		metacoin_items[item_id] = 1
+		savefile.set_entry("metacoin_item_purchases", metacoin_items)
+		savefile.save()
+	return TRUE
 
 /datum/preferences/proc/load_metacoins(ckey)
 	if(!ckey)

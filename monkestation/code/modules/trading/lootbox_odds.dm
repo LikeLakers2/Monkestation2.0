@@ -62,37 +62,16 @@
 
 /datum/loadout_item/proc/add_to_user(client/buyer)
 	SHOULD_CALL_PARENT(TRUE)
-	var/replacement_lootbox_message = span_warning("The item you received will not be saved, but you have been granted a replacement lootbox to use at a later point.")
-	if(!SSdbcore.IsConnected())
-		to_chat(buyer, span_warning("Database is not connected."))
-		to_chat(buyer, replacement_lootbox_message)
-		buyer.prefs.lootboxes_owned++
-		buyer.prefs.save_preferences()
-		return FALSE
+
 	if(!buyer?.prefs)
 		return FALSE
-	buyer.prefs.inventory += item_path
-	var/datum/db_query/query_add_gear_purchase
-	if(!buyer.prefs.inventory[item_path])
-		query_add_gear_purchase = SSdbcore.NewQuery({"
-			INSERT INTO [format_table_name("metacoin_item_purchases")] (`ckey`, `item_id`, `amount`) VALUES (:ckey, :item_id, :amount)"},
-			list("ckey" = buyer.ckey, "item_id" = item_path, "amount" = 1))
-	else
-		// Note from someone who didn't make this lootbox system: This seems to be related to
-		// duplicate lootbox items, but duplicate items don't appear to run this proc, making this
-		// seemingly useless. Even then, why are we setting the amount to 1?
-		query_add_gear_purchase = SSdbcore.NewQuery({"
-			UPDATE [format_table_name("metacoin_item_purchases")] SET amount = :amount WHERE ckey = :ckey AND item_id = :item_id"},
-			list("ckey" = buyer.ckey, "item_id" = item_path, "amount" = 1))
-	if(!query_add_gear_purchase.Execute())
-		// If the query fails to execute, notify the user and give them a replacement lootbox.
+
+	if(!buyer.prefs.add_item_to_inventory(item_path))
 		to_chat(buyer, span_warning("Failed to add lootbox item to database."))
-		to_chat(buyer, replacement_lootbox_message)
+		to_chat(buyer, span_warning("The item you received will not be saved, but you have been granted a replacement lootbox to use at a later point."))
 		buyer.prefs.lootboxes_owned++
 		buyer.prefs.save_preferences()
-		qdel(query_add_gear_purchase)
 		return FALSE
-	qdel(query_add_gear_purchase)
 
 	return TRUE
 
