@@ -36,8 +36,11 @@ BEGIN TRANSACTION;
   used.
 
 ## Notes relevant to implementation
-* SQLite does not provide `INET_ATON` and `INET_NTOA` functions. However, since rust-g would need to
-  be modified to support SQLite, rust-g can simply provide those functions to SQLite.
+* There are several functions SQLite does not provide. For example, the `INET_ATON` or
+  `TIMESTAMPDIFF` functions. However, since rust-g would need to be modified to support SQLite
+  anyway, rust-g can simply provide those functions to SQLite.
+	* List of functions so far that I found need to be defined: `INET_ATON`, `INET_NTOA`,
+	  `TIMESTAMPDIFF`
 */
 
 ------------------
