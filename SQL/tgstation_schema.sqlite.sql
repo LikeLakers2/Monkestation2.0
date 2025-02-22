@@ -1,5 +1,45 @@
 BEGIN TRANSACTION;
 
+/*
+## Notes relevant to translation
+* SQLite does not enforce that fields be a certain type unless a table explicitly enables strict
+  mode.
+
+* Where the original schema specifies a text-like type, `TEXT` is used. There is no way to specify a
+  maximum length of strings in SQLite - but this isn't a problem that needs to be solved by the
+  codebase.
+
+* Where the original schema specifies a number-like type that is akin to a boolean, the type
+  `BOOLEAN` is used.
+	* SQLite will interpret this as a `NUMERIC` field - but for all intents and purposes, you can
+	  treat this as only a `1` or a `0`.
+
+* Where the original schema specifies a number-like type, `INTEGER` is used.
+	* Except for where the original schema specifies `unsigned` - in which case, we use
+	  `UNSIGNED_INTEGER` (which is handled by SQLite as the same type).
+	* Technically speaking, SQLite's `INTEGER` covers the same range as MySQL's signed `BIGINT`
+	  (both equal to an `i64` in Rust) - but there is no way to match an unsigned `BIGINT`. However,
+	  the original schema does not seem to expect a higher value than SQLite's maximum.
+
+* Where the original schema specifies a field as either the type `TIMESTAMP` or `DATETIME`,
+  `DATETIME` is used.
+	* SQLite will interpret this as a `NUMERIC` field, though it will usually get handled as a
+	  `TEXT`.
+
+* The one stored procedure in the original schema, `set_poll_deleted`, is replicated as a trigger
+  that runs when updating the `deleted` column on a `poll_question` row.
+
+* For certain fields which are obviously meant to represent a reference to a field in another table,
+  a `FOREIGN KEY` constraint is used.
+
+* Where the original schema uses an `enum` type, a `CHECK(field IN ('a', 'b', 'c'))` constraint is
+  used.
+
+## Notes relevant to implementation
+* SQLite does not provide `INET_ATON` and `INET_NTOA` functions. However, since rust-g would need to
+  be modified to support SQLite, rust-g can simply provide those functions to SQLite.
+*/
+
 ------------------
 -- ACHIEVEMENTS --
 ------------------
