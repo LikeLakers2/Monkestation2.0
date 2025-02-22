@@ -21,10 +21,13 @@ BEGIN TRANSACTION;
 	  (both equal to an `i64` in Rust) - but there is no way to match an unsigned `BIGINT`. However,
 	  the original schema does not seem to expect a higher value than SQLite's maximum.
 
-* Within performace-metric-type tables, decimals with quite a lot of precision are used. I'm unsure
-  if SQLite will write overly-precise decimals out as `TEXT` - but even if it does try to write them
-  as `REAL`, the precision from an 8-byte floating number is still well above what is needed for
-  performance metrics.
+* Within performance-metric-type tables, there are fields that use the decimal type, with quite a
+  lot of precision. In these cases, I have simply used `DECIMAL` (which SQLite will treat as a
+  `NUMERIC`). Testing seems to reveal that, although `NUMERIC` will be stored as a `REAL` if
+  possible, SQLite will fallback to storing a decimal number as TEXT should it be too precise.
+	* That said, even if it didn't fallback to TEXT, the amount of precision provided by a `REAL`
+	  (an 8-byte floating point number) would be well above the precision needed for most
+	  performance metrics.
 
 * Where the original schema specifies a field as either the type `TIMESTAMP` or `DATETIME`,
   `DATETIME` is used.
