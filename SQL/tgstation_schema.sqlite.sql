@@ -14,12 +14,17 @@ BEGIN TRANSACTION;
 	* SQLite will interpret this as a `NUMERIC` field - but for all intents and purposes, you can
 	  treat this as only a `1` or a `0`.
 
-* Where the original schema specifies a number-like type, `INTEGER` is used.
+* Where the original schema specifies a integer-like type, `INTEGER` is used.
 	* Except for where the original schema specifies `unsigned` - in which case, we use
 	  `UNSIGNED_INTEGER` (which is handled by SQLite as the same type).
 	* Technically speaking, SQLite's `INTEGER` covers the same range as MySQL's signed `BIGINT`
 	  (both equal to an `i64` in Rust) - but there is no way to match an unsigned `BIGINT`. However,
 	  the original schema does not seem to expect a higher value than SQLite's maximum.
+
+* Within performace-metric-type tables, decimals with quite a lot of precision are used. I'm unsure
+  if SQLite will write overly-precise decimals out as `TEXT` - but even if it does try to write them
+  as `REAL`, the precision from an 8-byte floating number is still well above what is needed for
+  performance metrics.
 
 * Where the original schema specifies a field as either the type `TIMESTAMP` or `DATETIME`,
   `DATETIME` is used.
@@ -769,6 +774,61 @@ DROP INDEX IF EXISTS "idx_ticket_tic_rid";
 CREATE INDEX "idx_ticket_tic_rid" ON "ticket" (
 	"ticket",
 	"round_id"
+);
+
+--------------------------
+-- TUTORIAL COMPLETIONS --
+--------------------------
+DROP TABLE IF EXISTS "tutorial_completions";
+CREATE TABLE "tutorial_completions" (
+	"id"	INTEGER NOT NULL,
+	"ckey"	TEXT NOT NULL,
+	"tutorial_key"	TEXT NOT NULL,
+	PRIMARY KEY("id" AUTOINCREMENT),
+	CONSTRAINT "ckey_tutorial_unique" UNIQUE("ckey","tutorial_key")
+);
+
+-------------------------
+-- PERFORMANCE METRICS --
+-------------------------
+DROP TABLE IF EXISTS "metric_data";
+CREATE TABLE "metric_data" (
+	"id"	INTEGER NOT NULL,
+	"datetime"	DATETIME NOT NULL,
+	"cpu"	UNSIGNED_DECIMAL DEFAULT null,
+	"maptick"	UNSIGNED_DECIMAL DEFAULT null,
+	"elapsed_processed"	UNSIGNED_INTEGER DEFAULT null,
+	"elapsed_real"	UNSIGNED_INTEGER DEFAULT null,
+	"client_count"	UNSIGNED_INTEGER DEFAULT null,
+	"round_id"	UNSIGNED_INTEGER DEFAULT null,
+	"relational_id"	TEXT DEFAULT null,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+
+DROP TABLE IF EXISTS "subsystem_metrics";
+CREATE TABLE "subsystem_metrics" (
+	"id"	INTEGER NOT NULL,
+	"avg_iter_count"	DECIMAL NOT NULL DEFAULT 0.000000,
+	"avg_drift"	DECIMAL NOT NULL DEFAULT 0.000000,
+	"datetime"	DATETIME NOT NULL,
+	"round_id"	UNSIGNED_INTEGER DEFAULT null,
+	"ss_id"	TEXT DEFAULT null,
+	"relational_id"	TEXT DEFAULT null,
+	"relation_id_SS"	TEXT DEFAULT null,
+	"cost"	UNSIGNED_DECIMAL DEFAULT null,
+	"tick_usage"	UNSIGNED_DECIMAL DEFAULT null,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+
+DROP TABLE IF EXISTS "subsystem_extra_metrics";
+CREATE TABLE "subsystem_extra_metrics" (
+	"id"	INTEGER NOT NULL,
+	"datetime"	DATETIME NOT NULL,
+	"round_id"	UNSIGNED_INTEGER DEFAULT null,
+	"ss_id"	TEXT DEFAULT null,
+	"relation_id_SS"	TEXT DEFAULT null,
+	"ss_value"	TEXT NOT NULL CHECK(json_valid(ss_value)) COLLATE BINARY,
+	PRIMARY KEY("id" AUTOINCREMENT)
 );
 
 
