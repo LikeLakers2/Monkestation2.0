@@ -1,8 +1,8 @@
 BEGIN TRANSACTION;
 
---------------------------
--- ACHIEVEMENT METADATA --
---------------------------
+------------------
+-- ACHIEVEMENTS --
+------------------
 DROP TABLE IF EXISTS "achievement_metadata";
 CREATE TABLE "achievement_metadata" (
 	"achievement_key"	TEXT NOT NULL,
@@ -13,16 +13,14 @@ CREATE TABLE "achievement_metadata" (
 	PRIMARY KEY("achievement_key")
 );
 
-------------------
--- ACHIEVEMENTS --
-------------------
 DROP TABLE IF EXISTS "achievements";
 CREATE TABLE "achievements" (
 	"ckey"	TEXT NOT NULL,
 	"achievement_key"	TEXT NOT NULL,
 	"value"	INTEGER,
 	"last_updated"	DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY("ckey","achievement_key")
+	PRIMARY KEY("ckey","achievement_key"),
+	FOREIGN KEY("achievement_key") REFERENCES "achievement_metadata"("achievement_key")
 );
 
 -----------
@@ -35,6 +33,17 @@ CREATE TABLE "admin" (
 	"feedback"	TEXT DEFAULT NULL,
 	PRIMARY KEY("ckey"),
 	FOREIGN KEY("rank") REFERENCES "admin_ranks"("rank")
+);
+
+DROP TABLE IF EXISTS "admin_connections";
+CREATE TABLE "admin_connections" (
+	"id"	INTEGER NOT NULL,
+	"ckey"	TEXT NOT NULL,
+	"ip"	UNSIGNED_INTEGER NOT NULL,
+	"cid"	TEXT NOT NULL,
+	"verification_time"	DATETIME,
+	PRIMARY KEY("id" AUTOINCREMENT),
+	CONSTRAINT "unique_constraints" UNIQUE("ckey","ip","cid")
 );
 
 DROP TABLE IF EXISTS "admin_log";
@@ -74,7 +83,7 @@ CREATE TABLE "ban" (
 	"applies_to_admins"	BOOLEAN NOT NULL DEFAULT 0,
 	"reason"	TEXT NOT NULL,
 	"ckey"	TEXT DEFAULT null,
-	"ip"	UNSIGNED__INTEGER DEFAULT null,
+	"ip"	UNSIGNED_INTEGER DEFAULT null,
 	"computerid"	TEXT DEFAULT null,
 	"a_ckey"	TEXT NOT NULL,
 	"a_ip"	UNSIGNED_INTEGER NOT NULL,
@@ -231,6 +240,19 @@ CREATE INDEX "idx_ipintel" ON "ipintel" (
 	"date"
 );
 
+----------------
+-- KNOWN ALTS --
+----------------
+DROP TABLE IF EXISTS "known_alts";
+CREATE TABLE "known_alts" (
+	"id"	INTEGER NOT NULL,
+	"ckey1"	TEXT NOT NULL,
+	"ckey2"	TEXT NOT NULL,
+	"admin_ckey"	TEXT NOT NULL DEFAULT '*no key*',
+	PRIMARY KEY("id" AUTOINCREMENT),
+	CONSTRAINT "unique_constraints" UNIQUE("ckey1","ckey2")
+);
+
 -----------------------
 -- LEGACY POPULATION --
 -----------------------
@@ -285,7 +307,7 @@ CREATE INDEX "idx_lib_search" ON "library" (
 	"category"
 );
 
--- `library_action` is a log of actions taken on books.
+-- `library_action` is a log of admin actions taken on books.
 DROP TABLE IF EXISTS "library_action";
 CREATE TABLE "library_action" (
 	"id"	INTEGER NOT NULL,
@@ -295,7 +317,8 @@ CREATE TABLE "library_action" (
 	"datetime"	DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	"action"	TEXT NOT NULL DEFAULT '',
 	"ip_addr"	UNSIGNED_INTEGER NOT NULL,
-	PRIMARY KEY("id" AUTOINCREMENT)
+	PRIMARY KEY("id" AUTOINCREMENT),
+	FOREIGN KEY("book") REFERENCES "library"("id")
 );
 
 --------------
@@ -634,6 +657,22 @@ CREATE TABLE "stickyban_matched_ip" (
 	"first_matched"	DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	"last_matched"	DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY("stickyban","matched_ip")
+);
+
+---------------------------
+-- TELEMETRY CONNECTIONS --
+---------------------------
+DROP TABLE IF EXISTS "telemetry_connections";
+CREATE TABLE "telemetry_connections" (
+	"id"	INTEGER NOT NULL,
+	"ckey"	TEXT NOT NULL,
+	"telemetry_ckey"	TEXT NOT NULL,
+	"address"	UNSIGNED_INTEGER NOT NULL,
+	"computer_id"	TEXT NOT NULL,
+	"first_round_id"	UNSIGNED_INTEGER,
+	"last_round_id"	UNSIGNED_INTEGER,
+	PRIMARY KEY("id" AUTOINCREMENT),
+	CONSTRAINT "unique_constraints" UNIQUE("ckey","telemetry_ckey","address","computer_id")
 );
 
 ------------------------------------
