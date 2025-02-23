@@ -430,6 +430,33 @@ CREATE TABLE "metacoin_item_purchases" (
 	PRIMARY KEY("ckey","item_id")
 );
 
+---------------
+-- OVERWATCH --
+---------------
+DROP TABLE IF EXISTS "overwatch_asn_ban";
+CREATE TABLE "overwatch_asn_ban" (
+	"id"	TEXT NOT NULL,
+	"asn"	TEXT NOT NULL,
+	"a_ckey"	TEXT NOT NULL,
+	"timestamp"	DATETIME,
+	PRIMARY KEY("asn")
+);
+
+DROP TABLE IF EXISTS "overwatch_ip_cache";
+CREATE TABLE "overwatch_ip_cache" (
+	"ip"	TEXT NOT NULL DEFAULT '',
+	"response"	TEXT NOT NULL,
+	PRIMARY KEY("ip")
+);
+
+DROP TABLE IF EXISTS "overwatch_whitelist";
+CREATE TABLE "overwatch_whitelist" (
+	"ckey"	TEXT NOT NULL,
+	"a_ckey"	TEXT NOT NULL,
+	"timestamp"	DATETIME NOT NULL,
+	PRIMARY KEY("ckey")
+);
+
 ------------
 -- PLAYER --
 ------------
