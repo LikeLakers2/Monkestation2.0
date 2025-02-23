@@ -1,5 +1,7 @@
 BEGIN TRANSACTION;
 
+PRAGMA application_id = 0x83834951; -- `SS13` in ascii bytes
+
 /*
 ## Notes relevant to translation
 * SQLite does not enforce that fields be a certain type unless a table explicitly enables strict
