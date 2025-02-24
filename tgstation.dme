@@ -7113,6 +7113,7 @@
 #include "monkestation\code\modules\cargo\crates\security.dm"
 #include "monkestation\code\modules\cargo\crates\service.dm"
 #include "monkestation\code\modules\cargo\mail\mail_token.dm"
+#include "monkestation\code\modules\cargo\mail\new_mail_bag.dm"
 #include "monkestation\code\modules\cargo\markets\market_items.dm"
 #include "monkestation\code\modules\cargo\markets\market_items\weapons.dm"
 #include "monkestation\code\modules\cargo\packs\emergency.dm"
