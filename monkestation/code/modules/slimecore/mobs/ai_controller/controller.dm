@@ -20,6 +20,7 @@
 		/datum/ai_planning_subtree/slime_find_scared_item,
 		/datum/ai_planning_subtree/flee_target,
 		//now we try to
+		/datum/ai_planning_subtree/clear_current_target,
 		/datum/ai_planning_subtree/slime_find_non_latched_target,
 		/datum/ai_planning_subtree/basic_melee_attack_subtree/slime,
 	)

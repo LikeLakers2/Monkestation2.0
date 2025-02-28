@@ -19,6 +19,8 @@
 
 #define BB_BASIC_MOB_SCARED_ITEM "BB_basic_mob_scared_item"
 #define BB_BASIC_MOB_TARGETED_TRAIT "BB_basic_mob_targeted_trait"
+#define BB_SLIME_CURRENT_TARGET_FOOD "BB_slime_current_target_food"
+#define BB_SLIME_CURRENT_TARGET_MOB "BB_slime_current_target_mob"
 #define BB_SLIME_NON_LATCHED_TARGETING_STRATEGY "BB_slime_non_latched_targeting_strategy"
 #define BB_SLIME_NON_LATCHED_AND_SMALLER_TARGETING_STRATEGY "BB_slime_non_latched_and_smaller_targeting_strategy"
 #define BB_SLIME_SCARED_ITEM_TARGETING_STRATEGY "BB_slime_scared_item_targeting_strategy"

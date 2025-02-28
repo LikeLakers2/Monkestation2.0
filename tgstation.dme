@@ -8164,6 +8164,7 @@
 #include "monkestation\code\modules\slimecore\mobs\ai_controller\idle_behavior\slime_playful.dm"
 #include "monkestation\code\modules\slimecore\mobs\ai_controller\subtrees\basic_melee_tree.dm"
 #include "monkestation\code\modules\slimecore\mobs\ai_controller\subtrees\cleaning_tree.dm"
+#include "monkestation\code\modules\slimecore\mobs\ai_controller\subtrees\determine_target_slime.dm"
 #include "monkestation\code\modules\slimecore\mobs\ai_controller\subtrees\find_target_slime.dm"
 #include "monkestation\code\modules\slimecore\mobs\ai_controller\subtrees\flee_with_item.dm"
 #include "monkestation\code\modules\slimecore\mobs\ai_controller\targeting_strategies\holding_scary_item.dm"
